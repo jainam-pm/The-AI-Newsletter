@@ -1,0 +1,617 @@
+# The Morning Prompt — Agent Specification
+
+> **What this file is:** A complete build spec for a Claude Code agent that delivers
+> a daily AI newspaper at 8:30 AM IST. Hand this file to Claude Code or paste it
+> into your terminal session. It contains everything needed to scaffold, build,
+> and schedule the agent.
+
+---
+
+## 1. AGENT IDENTITY
+
+**Name:** The Morning Prompt  
+**Goal:** Deliver the top 5 AI news stories every morning at 8:30 AM IST as an
+interactive HTML newspaper, with competitive analysis and a Word of the Day.  
+**Model:** Haiku 4.5 (cheapest tier, $1/$5 per MTok — ~$1/month for daily runs).  
+**Fallback:** Sonnet 4.6 if competitive analysis quality is too shallow on Haiku.
+
+---
+
+## 2. WHAT THE AGENT PRODUCES
+
+Each morning, the agent outputs a single HTML file styled as an editorial newspaper.
+The edition contains:
+
+1. **Top 5 AI news stories** — each with:
+   - Category tag (color-coded)
+   - Headline + one-line deck
+   - 5W1H body (Who, What, When, Where, Why, How) — all facts from the source article only
+   - "Before → Now" line — what changed. Use the article's own comparison when available. Label as "background" if not from the source.
+   - "🥊 What others are doing" — 2–3 competitive bullets per story
+   - Source links (original announcement first, then coverage). Every link must be one the script actually fetched. Never invent a URL.
+   - 👍/👎 vote buttons (data collection for future personalization)
+   - Visual/graph ONLY if the source article contains chart-worthy data (benchmark scores, year-over-year stats). Do NOT generate visuals when the source has none.
+
+2. **Word of the Day** — one AI/tech term from today's stories:
+   - One-line definition
+   - Why it matters
+   - Which story it ties to
+
+3. **Follow-up notes** — if a story is a follow-up to a previous edition:
+   ```
+   📌 Follow-up: We covered this on [date]. What's new since: [one line].
+   ```
+
+---
+
+## 3. ARCHITECTURE
+
+```
+morning-prompt/
+├── CLAUDE.md                          # Points to the skill, nothing else
+├── .claude/skills/morning-prompt/
+│   └── SKILL.md                       # The skill prompt (section 7 of this doc)
+├── fetch.py                           # Python: RSS/API fetcher + scorer (zero LLM tokens)
+├── template.html                      # The finalized newspaper HTML template
+├── sources.yaml                       # Verified feed URLs and API endpoints
+├── published.json                     # Ledger of every story ever sent
+├── seen.json                          # Raw URLs already processed (dedup)
+├── glossary.yaml                      # ~150 AI terms for Word of the Day
+└── output/
+    └── 2026-10-03.html                # Today's edition (committed each run)
+```
+
+### 3.1 CLAUDE.md (keep it minimal — saves tokens on every session start)
+
+```markdown
+# The Morning Prompt
+
+Run `/morning-prompt` to generate today's edition.
+All instructions are in `.claude/skills/morning-prompt/SKILL.md`.
+```
+
+### 3.2 Why a skill, not CLAUDE.md
+
+CLAUDE.md loads into context every time Claude Code starts in this repo.
+A skill loads ONLY when the digest runs. Since this agent runs once a day,
+that saves ~1,500 tokens on every other session.
+
+---
+
+## 4. SOURCES (sources.yaml)
+
+### 4.1 Primary sources (RSS feeds — free, structured, reliable)
+
+| Category        | Sources                                                                 |
+|-----------------|-------------------------------------------------------------------------|
+| AI Labs         | OpenAI blog, Google AI blog, Anthropic news, Meta AI blog,             |
+|                 | Mistral blog, Nvidia AI blog, Hugging Face blog                        |
+| Tech Media      | TechCrunch /ai feed, VentureBeat /ai feed, The Verge /ai,             |
+|                 | MIT Tech Review /ai, Ars Technica, Wired /ai                          |
+| India           | Analytics India Magazine, Inc42, ET Tech AI section                     |
+| Newsletters     | TLDR AI, The Rundown, Import AI (Substack/beehiiv RSS)                 |
+
+### 4.2 API sources (free, structured, reliable)
+
+| Source           | API / Method                          | What it gives                    |
+|------------------|---------------------------------------|----------------------------------|
+| Hacker News      | Algolia API (free, no key)            | Top stories + scores + comments  |
+| Reddit           | r/MachineLearning, r/LocalLLaMA RSS   | Community signal                 |
+| arXiv            | API (cs.AI, cs.CL, cs.LG)            | Research papers                  |
+| Hugging Face     | Daily Papers JSON endpoint            | Trending research                |
+| GitHub Search    | API (free with token, 60/hr without)  | Trending AI repos (future use)   |
+
+### 4.3 Light HTML scrape (medium reliability — breaks on redesign)
+
+| Source           | Why scrape                            | Mitigation                       |
+|------------------|---------------------------------------|----------------------------------|
+| Lab pages w/o RSS| Some labs don't offer feeds           | Check monthly, swap to RSS when available |
+| GitHub Trending  | No official API for trending          | Use GitHub Search API as fallback |
+
+### 4.4 Skip these
+
+- X/Twitter (paid API, scraping violates terms)
+- LinkedIn (scraping prohibited)
+- Paywalled sites (The Information, Bloomberg AI section)
+
+### 4.5 Source discovery
+
+Run a one-time discovery session in Claude Code before the first daily run:
+- Check each source for a working RSS feed or API endpoint
+- Test each URL, verify it returns fresh content
+- Check robots.txt for scraping sources
+- Save working URLs to `sources.yaml`
+- This discovery run is the only time Claude spends tokens on source setup
+
+---
+
+## 5. FETCH.PY — WHAT RUNS WITHOUT CLAUDE (ZERO TOKENS)
+
+`fetch.py` is a pure Python script. No LLM calls. It does all the heavy lifting.
+
+### 5.1 Steps
+
+```
+1. PULL       — Hit every source in sources.yaml. Collect items from last 24 hours.
+2. TIMESTAMP  — Use the earliest time the script first saw each link,
+                not the feed's claimed date (feeds lie about dates).
+3. DEDUP      — Remove duplicates by:
+                a) Exact URL match
+                b) Fuzzy title match (same company + same event = same story)
+4. MEMORY     — Load published.json (last 30 days).
+                Drop anything already sent UNLESS the same company+product
+                has a genuinely new article (different URL, published after
+                the original was sent). Flag those as follow-ups.
+5. SCORE      — Assign a score to each story:
+                +3  if covered by 3+ independent sources
+                +2  if from an official lab announcement
+                +2  if HN score > 200 or Reddit score > 500
+                +1  if from a major tech publication
+                -1  if only from a single minor source
+6. OUTPUT     — Print ~25 top candidates as compact lines:
+                title | source | link | one-sentence summary | score | follow-up flag
+```
+
+### 5.2 Output format (what Claude receives)
+
+```
+CANDIDATES (25):
+1. [score:7] Google launches Gemini 4 Argon | blog.google | https://... | New frontier model, 1M output tokens, DeepSWE 77.9% | FRESH
+2. [score:6] Apple tightens macOS Full Disk Access | techcrunch.com | https://... | New controls after Meta Muse controversy | FRESH
+3. [score:5] [FOLLOW-UP: covered 2026-10-01] OpenAI GPT-6.1 Sol back to speed | x.com | https://... | Usage reset after launch slowdown | FOLLOW-UP
+...
+```
+
+### 5.3 Dependencies
+
+```
+feedparser          # RSS parsing
+requests            # HTTP calls
+rapidfuzz           # Fuzzy title matching for dedup
+pyyaml              # sources.yaml
+```
+
+No heavyweight libraries. No Selenium. No browser automation.
+
+---
+
+## 6. STORY FORMAT RULES
+
+### 6.1 Structure per story
+
+```
+[Category Tag]  — color-coded pill (Models, Security, Agents & Privacy, Builders & Funding, Policy, Research, India)
+
+Headline        — clear, factual, no clickbait
+Deck            — one line: what happened + why it matters
+
+[Visual]        — ONLY if the source contains a benchmark chart, comparison table,
+                   or data point that can be shown as a simple bar/comparison.
+                   Extract and reproduce it. Do NOT generate visuals when the source has none.
+
+[Read full story →]  — expands to:
+
+  WHO            — the company, lab, or people behind it
+  WHAT           — what was released or announced, 1–2 plain sentences
+  WHEN           — date of announcement, when it's available
+  WHERE          — where you can access it (API, app, open weights, region limits)
+  WHY            — why they did it, the problem it solves, competitive context
+  HOW            — how it works simply, how you can try it today
+
+  BEFORE → NOW   — what existed previously vs what changed.
+                   Use the article's own comparison when it gives one.
+                   If not from the source, label as "background" and keep it general.
+
+  🥊 WHAT OTHERS ARE DOING
+  - Company A: one line
+  - Company B: one line
+  - Company C: one line (or "No direct competitor move this week" if none)
+
+  SOURCE LINKS
+  - Original: official announcement (always first)
+  - Coverage: 1–2 independent news articles
+
+  [👍 More like this] [👎 Less]   — vote buttons
+```
+
+### 6.2 Category definitions
+
+| Category            | Color   | When to use                                                |
+|---------------------|---------|------------------------------------------------------------|
+| Models              | #2a6fa8 | New model releases, benchmarks, model comparisons          |
+| Security            | #b33425 | Vulnerabilities, threat reports, patches, cyber defense    |
+| Agents & Privacy    | #7a3ea0 | Agent capabilities, permissions, privacy, access control   |
+| Builders & Funding  | #4db87a | Funding rounds, acquisitions, new dev tools, infra launches|
+| Policy              | #d4a04a | Regulation, government action, voluntary commitments       |
+| Research            | #2a6fa8 | Papers, breakthroughs, new methods (if no product launch)  |
+| India               | #d4a04a | India-specific AI news                                     |
+
+### 6.3 Freshness rules
+
+- **Default:** only stories first published in the last 24 hours.
+- **Exception:** a major story not yet covered. "Major" = came directly from a big lab,
+  OR 3+ independent sources covered it.
+- **Follow-ups:** if a story was covered in a previous edition AND something genuinely
+  new has happened, run it with a follow-up note at the top. The 5W1H covers only
+  what changed.
+
+### 6.4 Accuracy rules
+
+- Write 5W1H ONLY from the fetched article text.
+- If the source doesn't answer a W, write "Not stated."
+- Every link must be one the script actually fetched. Never invent a URL.
+- For competitive analysis: one targeted web search per story if the fetched
+  candidates don't already have the answer.
+- If no competitor has done anything comparable, say so.
+
+### 6.5 Length
+
+- ~120–150 words per story (body, excluding links and competitive bullets)
+- Total edition: ~5–6 minute read
+
+---
+
+## 7. SKILL PROMPT (.claude/skills/morning-prompt/SKILL.md)
+
+```markdown
+---
+name: morning-prompt
+description: Generate the daily top-5 AI news digest from pre-fetched candidates.
+---
+
+You are the editor of The Morning Prompt, a daily AI newspaper.
+
+## INPUT
+Today's candidates (pre-scored, pre-deduplicated):
+!`python fetch.py`
+
+## YOUR JOB
+
+### Step 1: Pick 5
+Choose the 5 most significant stories from the candidates.
+- Prefer real launches and research over hype.
+- Merge duplicate coverage into one story.
+- Spread across categories when possible.
+- If a candidate is flagged FOLLOW-UP, include the follow-up note.
+
+### Step 2: Classify
+Tag each story with one category: Models, Security, Agents & Privacy,
+Builders & Funding, Policy, Research, India.
+
+### Step 3: Fetch full articles
+For each of the 5 stories, fetch the original article URL.
+Cap reading at 1,500 words per article.
+
+### Step 4: Write each story
+Use this exact structure for each:
+- Headline (clear, factual)
+- Deck (one line)
+- 5W1H (Who, What, When, Where, Why, How) — from the article only.
+  If the source doesn't answer one, write "Not stated."
+- Before → Now — use the article's comparison. If not available, label "background."
+- Visual — ONLY if the source contains benchmark data, a chart, or a stat
+  that can be shown as a simple bar. Extract and reproduce it.
+  Leave visual empty if the source has nothing to chart.
+
+### Step 5: Competitive analysis
+For each story, write 2–3 bullets on what competitors or peers are doing.
+Check the other candidates first. If not enough, do ONE web search per story.
+Format: "Company: one line."
+If no competitor move exists, write "No direct competitor move this week."
+
+### Step 6: Word of the Day
+Pick one technical term from today's stories.
+- One-line definition (under 25 words)
+- Why it matters (one sentence)
+- Which story it ties to
+
+### Step 7: Render
+Read template.html. Fill the STORIES array, WORD object, and any visual fields.
+Leave visual empty when the source had nothing to chart.
+Write the output to output/YYYY-MM-DD.html.
+
+### Step 8: Update memory
+Append all 5 stories to published.json with:
+date, headline, category, companies involved, original link, one-line summary.
+Append URLs to seen.json.
+Commit both files.
+
+## RULES
+- Max ~13,000 input tokens, ~4,500 output tokens per run.
+- Do NOT browse the web to find news. Only read pre-filtered candidates.
+- Do NOT generate visuals when the source has no data to chart.
+- Every link must be one you actually fetched. Never invent a URL.
+- If a source doesn't answer a W question, write "Not stated."
+```
+
+---
+
+## 8. TOKEN OPTIMIZATION
+
+### 8.1 Token budget per run
+
+| Step                                    | Tokens       | Who       |
+|-----------------------------------------|-------------|-----------|
+| Pull 35 RSS feeds + APIs               | 0           | Python    |
+| Deduplicate, score, filter to ~25       | 0           | Python    |
+| Check published.json for repeats        | 0           | Python    |
+| Feed 25 candidate lines to Claude       | ~2,500 in   | Skill     |
+| Skill instructions (template, rules)    | ~1,500 in   | Skill     |
+| Claude picks 5, asks to fetch articles  | ~500 out    | Skill     |
+| Read 5 full articles (1,500 words each) | ~6,000 in   | Fetched   |
+| 5 competitive-analysis searches         | ~3,000 in   | Search    |
+| Claude writes edition + HTML            | ~4,000 out  | Skill     |
+| **TOTAL PER RUN**                       | **~13K in · ~4.5K out** | |
+
+### 8.2 Cost per model
+
+| Model       | Input cost  | Output cost | Daily cost | Monthly cost |
+|-------------|-------------|-------------|------------|--------------|
+| Haiku 4.5   | $1/MTok     | $5/MTok     | ~$0.035    | ~$1.05       |
+| Sonnet 4.6  | $3/MTok     | $15/MTok    | ~$0.11     | ~$3.30       |
+| Opus 4.7    | $5/MTok     | $25/MTok    | ~$0.18     | ~$5.40       |
+
+**Recommendation: Haiku 4.5.** This task is structured summarization + classification,
+not open-ended reasoning. Haiku handles it well. Step up to Sonnet only if competitive
+analysis bullets are too shallow.
+
+If running as a Claude Code Routine on a Pro/Max plan, usage counts against
+your subscription, not separate API billing.
+
+### 8.3 Why this is cheap
+
+1. Python does ALL fetching. Claude never browses to find news.
+2. Candidates are one line each (~100 tokens), not full articles.
+3. Full articles only for the final 5, capped at 1,500 words.
+4. Skill loads only when digest runs (not on every session start like CLAUDE.md).
+5. HTML template is static. Claude fills a data object, doesn't regenerate design.
+6. Visuals only when source has them. No wasted tokens inventing charts.
+7. Competitive analysis: one search per story, not open-ended browsing.
+
+---
+
+## 9. MEMORY SYSTEM
+
+### 9.1 published.json
+
+```json
+[
+  {
+    "date": "2026-10-03",
+    "headline": "Google launches Gemini 4 Argon",
+    "category": "Models",
+    "companies": ["Google", "Google DeepMind"],
+    "url": "https://blog.google/...",
+    "summary": "New frontier model, 1M output tokens, DeepSWE 77.9%, phased release starting with cyber defenders."
+  }
+]
+```
+
+- Checked by fetch.py before scoring candidates.
+- Compared by URL AND by company+product (catches different articles about the same story).
+- Keeps last 30 days. Older entries are archived.
+- Committed to git after each run so the next run has it.
+
+### 9.2 seen.json
+
+A flat list of URLs already processed. Faster than scanning published.json for dedup.
+
+### 9.3 glossary.yaml
+
+~150 AI/tech terms for Word of the Day. Each entry:
+```yaml
+- term: "Context window"
+  pos: "noun"
+  def: "The maximum amount of text a model can read and write in one conversation."
+  used: false
+```
+After a term is used, `used` is set to `true`. Prevents repeats.
+
+---
+
+## 10. SCHEDULING & DELIVERY
+
+### 10.1 Option A: Claude Code Routine (recommended)
+
+- Runs on Anthropic's cloud. Works with laptop closed.
+- Set to 8:30 AM IST.
+- Push the repo to GitHub first.
+- Create via: `/schedule daily at 8:30am, run the morning-prompt skill`
+- Or create at: claude.ai/code/routines
+
+**Cloud environment setup:**
+- Network access: Custom (add all RSS/API domains from sources.yaml)
+- Connectors: Gmail (for email delivery)
+
+### 10.2 Option B: Claude Code Desktop scheduled task
+
+- Runs on your machine. Requires laptop open + app running at 8:30 AM.
+- If laptop is asleep, one catch-up run happens on wake (could arrive late).
+- Create in Desktop app: Routines → New routine → Local → Daily at 8:30 AM.
+
+### 10.3 Email delivery
+
+Since Gmail can't render interactive HTML:
+- Send a **short email** with:
+  - 5 headlines + decks (plain text)
+  - "Open today's edition →" link to the full interactive HTML
+- The full HTML is either:
+  - A committed file in the GitHub repo (private repo, accessible via raw URL)
+  - Or hosted as a simple static page
+
+### 10.4 Persisting state across runs
+
+`published.json`, `seen.json`, and `glossary.yaml` must survive between runs.
+The routine commits them at the end of each run. If using a cloud routine,
+the repo is cloned fresh each time, so the committed state is the source of truth.
+
+---
+
+## 11. SKILLS & PLUGINS TO INSTALL
+
+### 11.1 Signal Hunter (plugin)
+
+**What:** Aggregates 15+ sources (HN, GitHub, Reddit, YouTube, X/Twitter, newsletters,
+app stores), scores cross-source signals, and sends email digests.
+**Why:** Could replace most of fetch.py. Already handles source aggregation, scoring,
+and email sending.
+**Tradeoff:** General-purpose, not AI-news-specific. You still need:
+- AI topic filtering
+- published.json memory layer
+- The newspaper HTML template
+**Install:** `/plugin install signal-hunter`
+
+### 11.2 Bright Data (plugin)
+
+**What:** Web scraping with bot-detection/CAPTCHA bypass.
+**Why:** Useful for sources without RSS (GitHub Trending, lab pages without feeds).
+Saves you from writing fragile scraping code.
+**Install:** `/plugin install bright-data`
+
+### 11.3 Evaluation
+
+Test Signal Hunter first. If it covers enough of the fetching + scoring:
+- Use it as the data layer
+- Write only the AI-topic filter, memory, and newspaper template on top
+- This further reduces custom code and maintenance
+
+If Signal Hunter doesn't fit (too general, wrong sources, can't customize scoring):
+- Build fetch.py from scratch using the spec in section 5
+- Use Bright Data only for the 2–3 sources that need scraping
+
+---
+
+## 12. UI — FINALIZED NEWSPAPER TEMPLATE
+
+### 12.1 Design decisions
+
+- **Light editorial palette:** warm cream (#faf6eb), dark ink (#1a1710), gold accents
+- **No dark/night mode**
+- **No "Today's pulse" section**
+- **No "Today's categories" sidebar section**
+- **No "Your feedback" summary section**
+- **No "Edition info" section**
+- **No footer "end of edition" line**
+- **Layout:** two-column grid (stories left, Word of the Day right in sidebar)
+- **Stories:** collapsed by default (except lead story). Click to expand.
+- **Faded italic numbers** (01, 02...) beside each story
+- **Color-coded category pills** on each story
+- **👍/👎 buttons** inside each story (visible when expanded), styled subtle
+- **Visuals** between deck and "Read full story" link, ONLY when source has data
+- **Word of the Day** in sidebar: dark card with gold term, tied to a story
+- **Mobile responsive:** single column below 820px
+
+### 12.2 Template location
+
+Save the finalized HTML as `template.html` in the repo root.
+The skill reads it, fills the STORIES array and WORD object, and writes
+the output to `output/YYYY-MM-DD.html`.
+
+### 12.3 The STORIES data structure Claude fills
+
+```javascript
+const STORIES = [
+  {
+    id: "s1",
+    cat: "models",           // key from CATS object
+    n: "01",                 // display number
+    head: "...",             // headline
+    deck: "...",             // one-line summary
+    visual: `...`,           // HTML string for chart/graph, or empty string
+    rows: [                  // 5W1H rows
+      ["What", "..."],
+      ["Before → Now", "..."],
+      ["How to try it", "..."]
+    ],
+    vs: [                    // competitive bullets
+      ["Company", "One line on what they're doing"],
+    ],
+    links: [                 // source links
+      ["blog.google", "https://..."],
+      ["TechCrunch", "https://..."]
+    ]
+  },
+  // ... 4 more stories
+];
+
+const WORD = {
+  term: "...",
+  pos: "noun · AI fluency",
+  def: "...",
+  why: "...",
+  tie: "Ties to story #1"
+};
+```
+
+### 12.4 Color map
+
+```javascript
+const CATS = {
+  models:   { label: "Models",              color: "#2a6fa8" },
+  security: { label: "Security",            color: "#b33425" },
+  privacy:  { label: "Agents & Privacy",    color: "#7a3ea0" },
+  builders: { label: "Builders & Funding",  color: "#4db87a" },
+  policy:   { label: "Policy",              color: "#d4a04a" },
+  research: { label: "Research",            color: "#2a6fa8" },
+  india:    { label: "India",               color: "#d4a04a" }
+};
+```
+
+---
+
+## 13. BUILD ORDER
+
+When you hand this to Claude Code, ask it to build in this order:
+
+```
+Step 1: Scaffold the folder structure (section 3)
+Step 2: Write CLAUDE.md (minimal, 2 lines)
+Step 3: Write the skill SKILL.md (section 7)
+Step 4: Write sources.yaml with initial feed URLs
+Step 5: Run a one-time source discovery session (test each URL, save working ones)
+Step 6: Write fetch.py (section 5)
+Step 7: Save template.html from the finalized UI design
+Step 8: Write glossary.yaml (start with ~50 terms, expand to 150)
+Step 9: Initialize published.json and seen.json as empty arrays
+Step 10: Do a dry run — execute fetch.py, then run the skill manually
+Step 11: Review the output HTML, adjust template if needed
+Step 12: Set up the Claude Code Routine at 8:30 AM IST
+Step 13: Configure email delivery (Gmail connector or API)
+```
+
+---
+
+## 14. TO-DO BUCKET (NOT IN VERSION 1)
+
+These features were discussed but deferred:
+
+- [ ] Trending GitHub repos (Repo Rack)
+- [ ] Open-source Skill Shelf (skills from anthropics/skills, skills.sh, etc.)
+- [ ] Power-ups section (AgentQL, /brag, October, and other tools)
+- [ ] 60-second quiz tied to Word of the Day
+- [ ] Vote-driven personalization (use thumbs up/down history to bias scoring)
+- [ ] Weekly digest / summary view
+- [ ] Any-word dictionary lookup (needs a small API service)
+- [ ] Context-aware dictionary for the interactive version
+- [ ] Full newspaper design iteration with trending repos, skills, power-ups
+
+---
+
+## 15. TESTING & QUALITY
+
+### 15.1 Two-week quiet run
+
+Run the agent daily for 2 weeks before relying on it. Track:
+- **Recall:** compare top 5 against TLDR AI or The Rundown. Did it catch the lead stories?
+- **Fact accuracy:** spot-check 5 summaries/day against source articles. Count errors.
+- **Fetch health:** each edition should log which sources failed (e.g., "34/36 sources OK").
+
+### 15.2 Acceptance criteria
+
+- Fetching almost never fails silently
+- Top 5 overlaps strongly with human-written AI newsletters
+- Every factual claim traces to a source link
+- No invented URLs
+- No repeated stories without a follow-up note
+- Edition renders correctly on mobile
+- Total token usage stays under 20K per run

@@ -1,0 +1,657 @@
+# The Morning Prompt — Glossary for Word of the Day
+# ~150 AI/tech terms. Mark "used: true" after publishing to avoid repeats.
+
+terms:
+  - term: "Context Window"
+    pos: "noun · LLM architecture"
+    def: "Maximum amount of text a model can read and write in one conversation."
+    why: "Determines what the model can remember and process; bigger = more capable."
+    used: false
+
+  - term: "Hallucination"
+    pos: "noun · AI behavior"
+    def: "When an AI confidently generates false information that sounds plausible."
+    why: "A core limitation of current LLMs; knowing it exists is critical for safe use."
+    used: false
+
+  - term: "Multimodal"
+    pos: "adjective · AI capability"
+    def: "An AI system that can process multiple types of input (text, images, audio, video)."
+    why: "Multimodal models are more flexible and powerful than text-only or image-only systems."
+    used: false
+
+  - term: "Fine-tuning"
+    pos: "noun · ML technique"
+    def: "Training a pre-existing model on a smaller, specific dataset to adapt it for a task."
+    why: "Enables customization without training from scratch; much faster and cheaper."
+    used: false
+
+  - term: "Prompt Injection"
+    pos: "noun · Security threat"
+    def: "When malicious input tricks an AI into ignoring its instructions and behaving unexpectedly."
+    why: "A growing security risk as AI systems are deployed in production."
+    used: false
+
+  - term: "Retrieval-Augmented Generation (RAG)"
+    pos: "noun · Architecture pattern"
+    def: "An AI system that retrieves relevant documents, then generates answers based on them."
+    why: "Reduces hallucinations and lets models use up-to-date information."
+    used: false
+
+  - term: "Transformer"
+    pos: "noun · Neural network architecture"
+    def: "The foundational architecture behind modern LLMs (BERT, GPT, Claude)."
+    why: "Transformers enabled the AI revolution by learning patterns at scale."
+    used: false
+
+  - term: "Embedding"
+    pos: "noun · Data representation"
+    def: "A numerical representation of text or images that captures semantic meaning."
+    why: "Embeddings enable similarity search and are the basis for RAG systems."
+    used: false
+
+  - term: "Token"
+    pos: "noun · Text unit"
+    def: "The smallest unit a language model processes; roughly 4 characters or 1 word."
+    why: "AI pricing and performance are measured in tokens; understanding this matters for cost."
+    used: false
+
+  - term: "Inference"
+    pos: "noun · ML operation"
+    def: "Running a trained AI model on new data to generate predictions or outputs."
+    why: "Inference is what users interact with; training is what companies do."
+    used: false
+
+  - term: "Model Weights"
+    pos: "noun · ML internals"
+    def: "The learned numerical parameters inside a neural network that determine its behavior."
+    why: "Quantizing or pruning weights is how companies make models faster and cheaper."
+    used: false
+
+  - term: "Zero-shot Learning"
+    pos: "noun · AI capability"
+    def: "Solving a task the model has never seen without any examples."
+    why: "Shows off the generalization power of modern LLMs."
+    used: false
+
+  - term: "Few-shot Learning"
+    pos: "noun · AI capability"
+    def: "Solving a task by showing the model just a few examples."
+    why: "Bridge between zero-shot and fine-tuning; no training needed."
+    used: false
+
+  - term: "Chain of Thought"
+    pos: "noun · Reasoning technique"
+    def: "Asking an AI to explain its reasoning step-by-step before giving an answer."
+    why: "Dramatically improves accuracy on complex reasoning tasks."
+    used: false
+
+  - term: "Temperature (in LLMs)"
+    pos: "noun · Sampling parameter"
+    def: "A setting that controls randomness; 0=deterministic, 1=creative."
+    why: "Understanding temperature helps tune output behavior for different use cases."
+    used: false
+
+  - term: "Quantization"
+    pos: "noun · Optimization technique"
+    def: "Reducing model precision (e.g., from 32-bit to 8-bit numbers) to shrink size and speed."
+    why: "Enables running large models on consumer hardware."
+    used: false
+
+  - term: "Latency"
+    pos: "noun · Performance metric"
+    def: "Time between sending a prompt and receiving a full response."
+    why: "Critical for user experience; milliseconds matter in real-time applications."
+    used: false
+
+  - term: "Throughput"
+    pos: "noun · Performance metric"
+    def: "Number of requests or tokens processed per unit time (e.g., tokens/second)."
+    why: "Determines how many users a system can serve simultaneously."
+    used: false
+
+  - term: "Open Weights"
+    pos: "adjective · Model availability"
+    def: "An AI model whose parameters are publicly released (e.g., Llama, Mistral)."
+    why: "Open-weights models enable local deployment and custom fine-tuning."
+    used: false
+
+  - term: "Alignment"
+    pos: "noun · AI safety"
+    def: "The challenge of making AI systems behave according to human values and intentions."
+    why: "Misaligned systems can behave harmfully or unpredictably at scale."
+    used: false
+
+  - term: "Jailbreak"
+    pos: "noun · Security exploit"
+    def: "A prompt or technique that tricks an AI into bypassing its safety guidelines."
+    why: "Shows where model alignment is weak; important for AI safety research."
+    used: false
+
+  - term: "Benchmarks"
+    pos: "noun · Evaluation metric"
+    def: "Standardized tests used to measure and compare AI model performance."
+    why: "Helps developers and users understand what a model is good at."
+    used: false
+
+  - term: "Training Data"
+    pos: "noun · ML input"
+    def: "The text, images, or other data used to teach an AI model."
+    why: "Model quality depends on training data; bias in training data shows up in output."
+    used: false
+
+  - term: "Overfitting"
+    pos: "noun · ML failure mode"
+    def: "When a model memorizes training data instead of learning generalizable patterns."
+    why: "Overfitted models fail on new, unseen data."
+    used: false
+
+  - term: "Generalization"
+    pos: "noun · ML capability"
+    def: "A model's ability to perform well on new, unseen data."
+    why: "True generalization is what makes AI useful beyond training data."
+    used: false
+
+  - term: "Backbone Model"
+    pos: "noun · Architecture"
+    def: "A pre-trained foundation model that serves as the starting point for specialized tasks."
+    why: "Companies build products by fine-tuning backbone models."
+    used: false
+
+  - term: "Agent"
+    pos: "noun · AI system type"
+    def: "An AI that can take actions, use tools, and pursue multi-step goals autonomously."
+    why: "Agents are the next frontier beyond chatbots."
+    used: false
+
+  - term: "Tool Use"
+    pos: "noun · AI capability"
+    def: "An AI's ability to call external functions, APIs, or programs to accomplish tasks."
+    why: "Tool use lets AI systems break free from pure text generation."
+    used: false
+
+  - term: "Agentic Loop"
+    pos: "noun · Architecture pattern"
+    def: "Repeating cycle where an AI observes the world, decides on actions, and takes them."
+    why: "The foundation of autonomous AI agents."
+    used: false
+
+  - term: "Reasoning"
+    pos: "noun · AI capability"
+    def: "An AI's ability to think through complex problems step-by-step."
+    why: "Reasoning is harder than pattern matching; it's what separates advanced AI from simple classifiers."
+    used: false
+
+  - term: "Scaling Laws"
+    pos: "noun · ML principle"
+    def: "Predictable improvements in AI performance as models and training data grow larger."
+    why: "Scaling laws guide investment in compute and data for model development."
+    used: false
+
+  - term: "Compute Cost"
+    pos: "noun · Economics"
+    def: "The cost of hardware (GPUs, TPUs) and electricity needed to train and run AI."
+    why: "Compute cost is the bottleneck limiting how large and capable models can be."
+    used: false
+
+  - term: "Parameter Count"
+    pos: "noun · Model size"
+    def: "The number of learnable weights in a model (e.g., GPT-4 has 1.76 trillion)."
+    why: "Generally, more parameters = more capability (but not always)."
+    used: false
+
+  - term: "Neural Network"
+    pos: "noun · AI architecture"
+    def: "A system inspired by biological neurons, made of interconnected layers of math."
+    why: "The foundation of all modern deep learning and LLMs."
+    used: false
+
+  - term: "Attention Mechanism"
+    pos: "noun · Transformer component"
+    def: "Part of a Transformer that decides which parts of input to focus on."
+    why: "Attention enables models to understand long-range dependencies in text."
+    used: false
+
+  - term: "Self-Attention"
+    pos: "noun · Transformer component"
+    def: "Attention that lets each token in a sequence attend to other tokens in the same sequence."
+    why: "Self-attention is what makes Transformers work so well."
+    used: false
+
+  - term: "Perplexity"
+    pos: "noun · Evaluation metric"
+    def: "How 'confused' a language model is; lower is better."
+    why: "Perplexity correlates with downstream task performance."
+    used: false
+
+  - term: "BLEU Score"
+    pos: "noun · Evaluation metric"
+    def: "Metric measuring similarity between AI-generated and human reference translations."
+    why: "Used to evaluate translation and text-generation quality."
+    used: false
+
+  - term: "F1 Score"
+    pos: "noun · Evaluation metric"
+    def: "Harmonic mean of precision and recall; standard measure of classification performance."
+    why: "Balances false positives and false negatives."
+    used: false
+
+  - term: "Precision"
+    pos: "noun · Evaluation metric"
+    def: "Fraction of predicted positives that are actually correct."
+    why: "High precision = fewer false alarms."
+    used: false
+
+  - term: "Recall"
+    pos: "noun · Evaluation metric"
+    def: "Fraction of actual positives that the model catches."
+    why: "High recall = fewer missed cases."
+    used: false
+
+  - term: "Supervised Learning"
+    pos: "noun · Training paradigm"
+    def: "Training AI on labeled examples (input-output pairs)."
+    why: "Most commercial AI systems are trained this way."
+    used: false
+
+  - term: "Unsupervised Learning"
+    pos: "noun · Training paradigm"
+    def: "Training AI on unlabeled data to find patterns."
+    why: "Enables learning from massive datasets without human annotation."
+    used: false
+
+  - term: "Reinforcement Learning"
+    pos: "noun · Training paradigm"
+    def: "Training AI by rewarding desired behavior and penalizing bad behavior."
+    why: "Powers game-playing AIs and is used to fine-tune LLMs."
+    used: false
+
+  - term: "Reward Model"
+    pos: "noun · ML technique"
+    def: "An AI that predicts how good or bad an output is; used in RLHF."
+    why: "Reward models let humans guide AI behavior without constant supervision."
+    used: false
+
+  - term: "RLHF (Reinforcement Learning from Human Feedback)"
+    pos: "noun · Training technique"
+    def: "Fine-tuning an AI by having humans rate outputs, then rewarding desired behavior."
+    why: "RLHF is how companies make AI safer and more helpful."
+    used: false
+
+  - term: "Constitutional AI"
+    pos: "noun · AI safety technique"
+    def: "Training AI to follow a set of principles (constitution) without human feedback."
+    why: "Potentially more scalable than RLHF for making safe AI systems."
+    used: false
+
+  - term: "Mechanistic Interpretability"
+    pos: "noun · AI safety research"
+    def: "Trying to understand how neural networks work by analyzing their internal structures."
+    why: "Understanding how models think is crucial for AI safety."
+    used: false
+
+  - term: "Black Box"
+    pos: "noun · Model opacity"
+    def: "An AI system whose internal reasoning is opaque and hard to explain."
+    why: "Black boxes are risky in high-stakes domains like healthcare or criminal justice."
+    used: false
+
+  - term: "Explainability"
+    pos: "noun · AI property"
+    def: "The ability to explain why an AI made a particular decision."
+    why: "Required for legal compliance and user trust."
+    used: false
+
+  - term: "Bias"
+    pos: "noun · AI risk"
+    def: "When an AI system systematically favors or disfavors certain groups."
+    why: "Bias in AI can perpetuate discrimination at scale."
+    used: false
+
+  - term: "Fairness"
+    pos: "noun · AI property"
+    def: "Treating different groups equitably in AI predictions and decisions."
+    why: "Fairness is ethical and increasingly required by regulation."
+    used: false
+
+  - term: "Robustness"
+    pos: "noun · AI property"
+    def: "An AI's ability to maintain performance when the environment changes unexpectedly."
+    why: "Robust models work reliably in real-world conditions."
+    used: false
+
+  - term: "Adversarial Attack"
+    pos: "noun · Security threat"
+    def: "Deliberately crafted input designed to fool or break an AI system."
+    why: "Shows vulnerabilities in AI security."
+    used: false
+
+  - term: "Adversarial Training"
+    pos: "noun · Robustness technique"
+    def: "Training an AI against adversarial attacks to make it more robust."
+    why: "Makes AI systems harder to fool."
+    used: false
+
+  - term: "Federated Learning"
+    pos: "noun · Training paradigm"
+    def: "Training AI across decentralized devices without centralizing data."
+    why: "Enables privacy-preserving machine learning."
+    used: false
+
+  - term: "Differential Privacy"
+    pos: "noun · Privacy technique"
+    def: "Adding noise to data so that individual records can't be re-identified."
+    why: "Mathematical guarantee that privacy is maintained."
+    used: false
+
+  - term: "Synthetic Data"
+    pos: "noun · Data generation"
+    def: "Artificial data generated by an AI, rather than collected from the real world."
+    why: "Reduces privacy risks and can augment training data."
+    used: false
+
+  - term: "Data Poisoning"
+    pos: "noun · Security attack"
+    def: "Injecting malicious or incorrect data into training data to corrupt an AI model."
+    why: "A subtle attack that can degrade model performance or inject biases."
+    used: false
+
+  - term: "Model Collapse"
+    pos: "noun · AI phenomenon"
+    def: "When AI-generated data is used to train new models, leading to quality decay."
+    why: "A feedback loop risk in an age of abundant AI-generated content."
+    used: false
+
+  - term: "Copyright"
+    pos: "noun · Legal issue"
+    def: "Legal rights over creative works; contested for AI-generated content."
+    why: "Unclear if AI training on copyrighted material is legal; actively litigated."
+    used: false
+
+  - term: "Attribution"
+    pos: "noun · Data governance"
+    def: "Crediting the original source of data or content used by an AI."
+    why: "Ethical and increasingly required by regulation."
+    used: false
+
+  - term: "API"
+    pos: "noun · Software interface"
+    def: "Interface that lets external software use an AI model's capabilities."
+    why: "Most AI access today is via APIs (OpenAI, Anthropic, etc.)."
+    used: false
+
+  - term: "Inference Serving"
+    pos: "noun · Deployment"
+    def: "Infrastructure that runs AI models at scale to serve user requests."
+    why: "Inference serving costs dominate AI economics at scale."
+    used: false
+
+  - term: "Edge AI"
+    pos: "noun · Deployment paradigm"
+    def: "Running AI models on edge devices (phones, IoT) rather than cloud servers."
+    why: "Enables low-latency, privacy-preserving AI."
+    used: false
+
+  - term: "Model Serving"
+    pos: "noun · Infrastructure"
+    def: "System for deploying and managing multiple AI models in production."
+    why: "Companies need to serve different models to different users efficiently."
+    used: false
+
+  - term: "Batching"
+    pos: "noun · Optimization"
+    def: "Processing multiple requests together for efficiency."
+    why: "Batching improves throughput and reduces latency."
+    used: false
+
+  - term: "Speculative Decoding"
+    pos: "noun · Speed optimization"
+    def: "Predicting the next token while waiting for the model to generate it."
+    why: "Can speed up inference by 10-20x for long generations."
+    used: false
+
+  - term: "Knowledge Distillation"
+    pos: "noun · Model compression"
+    def: "Training a smaller model to mimic a larger, more capable teacher model."
+    why: "Creates fast, cheap models that preserve much of the teacher's capability."
+    used: false
+
+  - term: "Mixture of Experts"
+    pos: "noun · Architecture pattern"
+    def: "A model architecture where different experts specialize in different tasks."
+    why: "Can scale to enormous models while keeping inference cost per-token low."
+    used: false
+
+  - term: "Sparse Model"
+    pos: "noun · Architecture"
+    def: "An AI model where only some neurons activate for each input."
+    why: "Sparse models are efficient; only the needed parts compute."
+    used: false
+
+  - term: "Dense Model"
+    pos: "noun · Architecture"
+    def: "An AI model where all neurons activate for each input."
+    why: "Dense models are slower but can be simpler."
+    used: false
+
+  - term: "Vision Transformer (ViT)"
+    pos: "noun · Architecture"
+    def: "Applying the Transformer architecture to images instead of text."
+    why: "ViT is how modern image models achieve strong performance."
+    used: false
+
+  - term: "CLIP"
+    pos: "noun · Model"
+    def: "Contrastive Learning for Image-text Pre-training; pairs images and text."
+    why: "Foundation for image search and multimodal AI."
+    used: false
+
+  - term: "Diffusion Model"
+    pos: "noun · Generation technique"
+    def: "AI model that generates images by gradually removing noise."
+    why: "Powers image generators like DALL-E and Stable Diffusion."
+    used: false
+
+  - term: "Variational Autoencoder (VAE)"
+    pos: "noun · Architecture"
+    def: "Neural network that learns compressed representations and generates new data."
+    why: "Used for image generation and anomaly detection."
+    used: false
+
+  - term: "GAN (Generative Adversarial Network)"
+    pos: "noun · Architecture"
+    def: "Two networks competing: one generates data, one tries to detect fakes."
+    why: "Early powerful image generation technique; now being replaced by diffusion."
+    used: false
+
+  - term: "Latent Space"
+    pos: "noun · ML concept"
+    def: "The compressed representation learned by an autoencoder."
+    why: "Enables interpolation and latent editing of generated content."
+    used: false
+
+  - term: "Autoregressive"
+    pos: "adjective · Generation method"
+    def: "Generating one token at a time, conditioning on previous tokens."
+    why: "How LLMs generate text; enables streaming responses."
+    used: false
+
+  - term: "Non-Autoregressive"
+    pos: "adjective · Generation method"
+    def: "Generating all tokens in parallel, not one-by-one."
+    why: "Faster but typically lower quality than autoregressive generation."
+    used: false
+
+  - term: "Decoding Strategy"
+    pos: "noun · Generation parameter"
+    def: "Algorithm for choosing the next token (greedy, beam search, sampling)."
+    why: "Different decoding strategies yield different quality/speed tradeoffs."
+    used: false
+
+  - term: "Greedy Decoding"
+    pos: "noun · Decoding strategy"
+    def: "Always picking the highest-probability next token."
+    why: "Fastest but can miss better overall sequences."
+    used: false
+
+  - term: "Beam Search"
+    pos: "noun · Decoding strategy"
+    def: "Keeping top-K candidates at each step to find better overall sequences."
+    why: "Better quality than greedy; used in translation and speech."
+    used: false
+
+  - term: "Top-K Sampling"
+    pos: "noun · Decoding strategy"
+    def: "Sampling from only the top K most likely tokens."
+    why: "Creates diverse output without the cost of beam search."
+    used: false
+
+  - term: "Nucleus Sampling"
+    pos: "noun · Decoding strategy"
+    def: "Sampling from the smallest set of tokens whose cumulative probability exceeds p."
+    why: "Balances quality and diversity better than fixed top-K."
+    used: false
+
+  - term: "Loss Function"
+    pos: "noun · ML training"
+    def: "Function measuring how wrong a model's predictions are."
+    why: "Training tries to minimize loss; lower loss = better predictions."
+    used: false
+
+  - term: "Gradient Descent"
+    pos: "noun · Optimization algorithm"
+    def: "Iteratively adjusting model weights to reduce loss."
+    why: "The algorithm that powers almost all AI training."
+    used: false
+
+  - term: "Backpropagation"
+    pos: "noun · Training algorithm"
+    def: "Computing gradients through the network to train it end-to-end."
+    why: "Backprop is how neural networks learn from data."
+    used: false
+
+  - term: "Learning Rate"
+    pos: "noun · Hyperparameter"
+    def: "How much to adjust weights per gradient descent step."
+    why: "Too high = diverges; too low = slow convergence."
+    used: false
+
+  - term: "Batch Size"
+    pos: "noun · Hyperparameter"
+    def: "Number of examples to process before updating weights."
+    why: "Larger batches are more stable but use more memory."
+    used: false
+
+  - term: "Epoch"
+    pos: "noun · Training cycle"
+    def: "One complete pass through the entire training dataset."
+    why: "Models typically train for 1-10+ epochs."
+    used: false
+
+  - term: "Convergence"
+    pos: "noun · Training goal"
+    def: "When a model stops improving significantly; loss plateaus."
+    why: "Stopping at convergence avoids overfitting."
+    used: false
+
+  - term: "Regularization"
+    pos: "noun · Training technique"
+    def: "Techniques to prevent overfitting by constraining model complexity."
+    why: "Regularization is essential for generalization."
+    used: false
+
+  - term: "Dropout"
+    pos: "noun · Regularization"
+    def: "Randomly disabling neurons during training."
+    why: "Prevents co-adaptation and improves generalization."
+    used: false
+
+  - term: "Weight Decay"
+    pos: "noun · Regularization"
+    def: "Penalizing large weights to keep the model simple."
+    why: "Encourages models to rely on important features."
+    used: false
+
+  - term: "Validation Set"
+    pos: "noun · Training data"
+    def: "Held-out data used to tune hyperparameters and detect overfitting."
+    why: "Validation prevents training-set leakage in hyperparameter tuning."
+    used: false
+
+  - term: "Test Set"
+    pos: "noun · Training data"
+    def: "Held-out data used for final evaluation; touched only once."
+    why: "A true test set gives an honest measure of model performance."
+    used: false
+
+  - term: "Cross-Validation"
+    pos: "noun · Evaluation technique"
+    def: "Splitting data into K folds and training K times, each on K-1 folds."
+    why: "Gives more stable performance estimates than a single train/val split."
+    used: false
+
+  - term: "Overfitting"
+    pos: "noun · Training failure"
+    def: "Model memorizes training data instead of learning patterns."
+    why: "Overfitted models fail on test data."
+    used: false
+
+  - term: "Underfitting"
+    pos: "noun · Training failure"
+    def: "Model is too simple to capture patterns in the data."
+    why: "Underfitted models fail on both train and test data."
+    used: false
+
+  - term: "Bias-Variance Tradeoff"
+    pos: "noun · ML principle"
+    def: "Tradeoff between model simplicity (high bias) and flexibility (high variance)."
+    why: "Understanding this guides choices about model complexity."
+    used: false
+
+  - term: "Activation Function"
+    pos: "noun · Neural network component"
+    def: "Non-linear function applied after each layer."
+    why: "Activations (ReLU, GELU, etc.) enable neural networks to learn non-linear patterns."
+    used: false
+
+  - term: "ReLU"
+    pos: "noun · Activation function"
+    def: "Rectified Linear Unit; f(x) = max(0, x)."
+    why: "Most common activation; simple, fast, works well."
+    used: false
+
+  - term: "Softmax"
+    pos: "noun · Function"
+    def: "Converts raw scores into a probability distribution."
+    why: "Used in classification to produce probabilities that sum to 1."
+    used: false
+
+  - term: "Cross-Entropy Loss"
+    pos: "noun · Loss function"
+    def: "Measures difference between predicted and actual probability distributions."
+    why: "Standard loss for classification tasks."
+    used: false
+
+  - term: "KL Divergence"
+    pos: "noun · Distance metric"
+    def: "Measures how different two probability distributions are."
+    why: "Used in RLHF and VAEs."
+    used: false
+
+  - term: "Entropy"
+    pos: "noun · Information theory"
+    def: "Measure of uncertainty or randomness in a distribution."
+    why: "High entropy = high uncertainty."
+    used: false
+
+  - term: "Mutual Information"
+    pos: "noun · Information theory"
+    def: "How much knowing X tells you about Y."
+    why: "Guides feature selection and interpretability."
+    used: false
+
+  - term: "Information Bottleneck"
+    pos: "noun · ML theory"
+    def: "Theory that neural networks compress input while preserving relevant information."
+    why: "Explains why networks learn useful representations."
+    used: false

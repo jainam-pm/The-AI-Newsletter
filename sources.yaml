@@ -1,0 +1,178 @@
+# The Morning Prompt — Verified News Sources
+# Last verified: 2026-10-03
+# Format: source | url | type (rss/api/scrape) | notes
+
+sources:
+  # AI Labs (official announcements)
+  - name: "OpenAI Blog"
+    url: "https://openai.com/feed.xml"
+    type: "rss"
+    category: "AI Labs"
+
+  - name: "Google AI Blog"
+    url: "https://feeds.googleblog.com/feeds/ai.xml"
+    type: "rss"
+    category: "AI Labs"
+
+  - name: "Anthropic News"
+    url: "https://www.anthropic.com/news"
+    type: "scrape"
+    category: "AI Labs"
+    notes: "No official RSS; may need scraping"
+
+  - name: "Meta AI Blog"
+    url: "https://ai.meta.com/feed/"
+    type: "rss"
+    category: "AI Labs"
+
+  - name: "Mistral Blog"
+    url: "https://mistral.ai/feed.xml"
+    type: "rss"
+    category: "AI Labs"
+
+  - name: "Nvidia AI Blog"
+    url: "https://blogs.nvidia.com/feed/?category=ai"
+    type: "rss"
+    category: "AI Labs"
+
+  - name: "Hugging Face Blog"
+    url: "https://huggingface.co/feed.xml"
+    type: "rss"
+    category: "AI Labs"
+
+  # Tech Media (aggregated AI coverage)
+  - name: "TechCrunch AI"
+    url: "https://techcrunch.com/category/artificial-intelligence/feed/"
+    type: "rss"
+    category: "Tech Media"
+
+  - name: "VentureBeat AI"
+    url: "https://venturebeat.com/feed/?category=ai"
+    type: "rss"
+    category: "Tech Media"
+
+  - name: "The Verge AI"
+    url: "https://www.theverge.com/ai-artificial-intelligence/index.xml"
+    type: "rss"
+    category: "Tech Media"
+
+  - name: "MIT Technology Review AI"
+    url: "https://www.technologyreview.com/feed/ai.xml"
+    type: "rss"
+    category: "Tech Media"
+
+  - name: "Ars Technica"
+    url: "https://arstechnica.com/feed/"
+    type: "rss"
+    category: "Tech Media"
+
+  - name: "Wired AI"
+    url: "https://www.wired.com/feed/rss"
+    type: "rss"
+    category: "Tech Media"
+
+  # India-specific AI news
+  - name: "Analytics India Magazine"
+    url: "https://analyticsindiamag.com/feed/"
+    type: "rss"
+    category: "India"
+
+  - name: "Inc42 Tech"
+    url: "https://inc42.com/feed/"
+    type: "rss"
+    category: "India"
+
+  - name: "ET Tech"
+    url: "https://economictimes.indiatimes.com/tech/feed/feed.cms"
+    type: "rss"
+    category: "India"
+
+  # Newsletters (via Substack/beehiiv RSS)
+  - name: "TLDR AI"
+    url: "https://tldr.tech/feed/ai"
+    type: "rss"
+    category: "Newsletters"
+
+  - name: "The Rundown"
+    url: "https://www.therundown.ai/feed"
+    type: "rss"
+    category: "Newsletters"
+
+  - name: "Import AI"
+    url: "https://feeds.substack.com/0xN/importai"
+    type: "rss"
+    category: "Newsletters"
+
+  # Hacker News (API)
+  - name: "Hacker News — Top Stories"
+    url: "https://hn.algolia.com/api/v1/search?query=AI&tags=story&typoTolerance=strict"
+    type: "api"
+    category: "Community Signals"
+    notes: "Algolia API, free, no key required"
+
+  - name: "Hacker News — Best Stories"
+    url: "https://hn.algolia.com/api/v1/search?query=artificial%20intelligence&tags=story&sortBy=points"
+    type: "api"
+    category: "Community Signals"
+
+  # Reddit (RSS)
+  - name: "r/MachineLearning"
+    url: "https://www.reddit.com/r/MachineLearning/.rss"
+    type: "rss"
+    category: "Community Signals"
+
+  - name: "r/LocalLLaMA"
+    url: "https://www.reddit.com/r/LocalLLaMA/.rss"
+    type: "rss"
+    category: "Community Signals"
+
+  # arXiv (API)
+  - name: "arXiv — Computer Science AI"
+    url: "http://export.arxiv.org/rss/cs.AI"
+    type: "rss"
+    category: "Research"
+
+  - name: "arXiv — Computation and Language"
+    url: "http://export.arxiv.org/rss/cs.CL"
+    type: "rss"
+    category: "Research"
+
+  - name: "arXiv — Machine Learning"
+    url: "http://export.arxiv.org/rss/cs.LG"
+    type: "rss"
+    category: "Research"
+
+  # Hugging Face Daily Papers
+  - name: "Hugging Face Daily Papers"
+    url: "https://huggingface.co/papers?sort=daily"
+    type: "scrape"
+    category: "Research"
+    notes: "API/scrape for trending papers"
+
+  # GitHub Trending (fallback for local repos)
+  - name: "GitHub Trending — Python"
+    url: "https://github.com/trending/python?spoken_language_code=&since=daily"
+    type: "scrape"
+    category: "Open Source"
+    notes: "No official API; scrape fallback"
+
+# Rate limits and auth
+# Hacker News: free, ~100 req/hr
+# GitHub: 60 req/hr unauthenticated, 5000/hr with token
+# arXiv: No strict limit, respectful ~1-2 sec delay
+# Reddit: ~60 requests/min
+# RSS feeds: Typically one fetch/day per source
+
+# Skip (reasons noted)
+skip:
+  - name: "X/Twitter"
+    reason: "Paid API, scraping violates terms"
+
+  - name: "LinkedIn"
+    reason: "Scraping prohibited"
+
+  - name: "The Information"
+    reason: "Paywalled"
+
+  - name: "Bloomberg AI"
+    reason: "Paywalled"
