@@ -64,7 +64,7 @@ class SupabaseClient:
                 "headline": story_data.get("head"),
                 "deck": story_data.get("deck"),
                 "category": story_data.get("cat"),
-                "source_url": story_data.get("links", [[None, ""][1])[1] if story_data.get("links") else "",
+                "source_url": story_data.get("links", [[None, ""]])[0][1] if story_data.get("links") else "",
                 "source_name": story_data.get("source"),
                 "companies": story_data.get("companies", []),
                 "summary": story_data.get("summary"),

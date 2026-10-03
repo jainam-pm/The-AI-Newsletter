@@ -622,3 +622,32 @@ with open(output_file, "w", encoding="utf-8") as f:
 
 print(f"\n[EDITOR] [OK] Edition rendered to {output_file}")
 print(f"[EDITOR] Open in browser to view: file://{os.path.abspath(output_file)}")
+
+# Save to Supabase
+print("\n[EDITOR] Saving to Supabase...")
+try:
+    from supabase_client import get_supabase_client
+    from datetime import date
+
+    supabase = get_supabase_client()
+
+    if supabase.enabled:
+        # Create edition
+        edition_id = supabase.create_edition(
+            date.today(),
+            headline="Top 5 AI Stories",
+            description=f"Daily AI news digest for {date.today()}"
+        )
+
+        if edition_id:
+            # Store each story
+            for story in stories:
+                supabase.store_story(edition_id, story)
+                print(f"  [OK] Stored: {story['head'][:60]}...")
+
+            print(f"[SUPABASE] Edition {edition_id} saved successfully!")
+    else:
+        print("[WARN] Supabase not configured. Run won't be saved to database.")
+except Exception as e:
+    print(f"[SUPABASE] Error saving to database: {e}")
+    print("[WARN] HTML edition still created successfully")
