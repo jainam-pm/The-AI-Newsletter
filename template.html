@@ -383,7 +383,13 @@
         </div>
     </div>
 
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script>
+        // Initialize Supabase (using your public credentials)
+        const SUPABASE_URL = 'https://mzsipmeuthconogugwry.supabase.co';
+        const SUPABASE_KEY = 'sb_publishable_AHLzBSVlyyQJSKIZFD2Nyg_R2WHJfMG';
+        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
         // Story data (filled by Claude)
         const CATS = {
             models:   { label: "Models",              color: "#2a6fa8" },
@@ -469,8 +475,8 @@
                             ${vsHtml}
                             ${linksHtml}
                             <div class="story-votes">
-                                <button class="vote-btn" onclick="voteStory('${story.id}', 'up')">👍 More like this</button>
-                                <button class="vote-btn" onclick="voteStory('${story.id}', 'down')">👎 Less</button>
+                                <button class="vote-btn" onclick="voteStory('${story.id}', 'up', this)">👍 More like this</button>
+                                <button class="vote-btn" onclick="voteStory('${story.id}', 'down', this)">👎 Less</button>
                             </div>
                         </div>
                     </div>
@@ -507,10 +513,87 @@
             }
         }
 
-        // Vote handler
-        function voteStory(id, type) {
-            console.log(`Vote: ${type} on story ${id}`);
-            // TODO: Send to backend/log
+        // Vote handler - Send to Supabase
+        async function voteStory(storyId, type, buttonElement) {
+            // Find the story object by ID
+            const story = STORIES.find(s => s.id === storyId);
+            if (!story) {
+                console.error('Story not found:', storyId);
+                return;
+            }
+
+            // Use provided button element
+            const button = buttonElement;
+
+            try {
+                // Generate session ID if not exists
+                let sessionId = localStorage.getItem('morning-prompt-session');
+                if (!sessionId) {
+                    sessionId = 'user-' + Date.now() + '-' + Math.random().toString(36).substr(2, 9);
+                    localStorage.setItem('morning-prompt-session', sessionId);
+                }
+
+                // Show loading state
+                button.disabled = true;
+                button.style.opacity = '0.6';
+                button.textContent = 'Saving...';
+
+                // Get story ID from database
+                const { data: stories, error: searchError } = await supabase
+                    .from('stories')
+                    .select('id')
+                    .eq('headline', story.head)
+                    .limit(1);
+
+                if (searchError || !stories || stories.length === 0) {
+                    throw new Error('Story not found in database');
+                }
+
+                const storyId = stories[0].id;
+
+                // Send vote to Supabase
+                const { data, error } = await supabase
+                    .from('votes')
+                    .insert({
+                        story_id: storyId,
+                        vote_type: type,
+                        user_id: sessionId
+                    });
+
+                if (error) {
+                    throw error;
+                }
+
+                // Visual feedback - success
+                button.textContent = type === 'up' ? '👍 Voted!' : '👎 Noted!';
+                button.style.background = '#4db87a';
+                button.style.color = '#faf6eb';
+
+                console.log(`Vote saved to Supabase: ${type} on "${story.head}"`);
+
+                // Re-enable after 2 seconds
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                    button.textContent = type === 'up' ? '👍 More like this' : '👎 Less';
+                    button.style.background = 'transparent';
+                    button.style.color = '#1a1710';
+                }, 2000);
+
+            } catch (error) {
+                console.error('Error recording vote:', error);
+                button.textContent = 'Failed';
+                button.style.background = '#b33425';
+
+                // Reset after 3 seconds
+                setTimeout(() => {
+                    button.disabled = false;
+                    button.style.opacity = '1';
+                    button.textContent = type === 'up' ? '👍 More like this' : '👎 Less';
+                    button.style.background = 'transparent';
+                    button.style.color = '#1a1710';
+                }, 3000);
+            }
         }
 
         // Set date
