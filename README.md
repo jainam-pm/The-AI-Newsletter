@@ -164,11 +164,6 @@ User feedback (👍/👎)
 | id | story_id | user_id | vote_type | created_at |
 ```
 
-### words_of_day
-Historical words (avoid repeats)
-```
-| id | edition_id | term | definition | why_matters |
-```
 
 ### user_preferences
 Personalization (future feature)

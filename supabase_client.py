@@ -78,27 +78,6 @@ class SupabaseClient:
             print(f"[ERROR] Failed to store story: {e}")
             return None
 
-    def store_word_of_day(self, edition_id: int, word_data: Dict, tied_story_id: Optional[int] = None) -> bool:
-        """Store Word of the Day"""
-        if not self.enabled:
-            return False
-
-        try:
-            self.client.table("words_of_day").insert({
-                "edition_id": edition_id,
-                "term": word_data.get("term"),
-                "pos": word_data.get("pos"),
-                "definition": word_data.get("def"),
-                "why_matters": word_data.get("why"),
-                "tied_story_id": tied_story_id
-            }).execute()
-
-            print(f"[SUPABASE] Stored Word of Day: {word_data.get('term')}")
-            return True
-        except Exception as e:
-            print(f"[ERROR] Failed to store word of day: {e}")
-            return False
-
     def get_votes_for_story(self, story_id: int) -> Dict[str, int]:
         """Get vote counts for a story"""
         if not self.enabled:

@@ -57,18 +57,6 @@ CREATE TABLE IF NOT EXISTS user_preferences (
   updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
 );
 
--- Table: words_of_day
--- Word of the Day history (avoid repeats)
-CREATE TABLE IF NOT EXISTS words_of_day (
-  id BIGSERIAL PRIMARY KEY,
-  edition_id BIGINT NOT NULL REFERENCES editions(id) ON DELETE CASCADE,
-  term TEXT NOT NULL,
-  pos TEXT, -- part of speech
-  definition TEXT NOT NULL,
-  why_matters TEXT,
-  tied_story_id BIGINT REFERENCES stories(id),
-  created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
-);
 
 -- Table: reading_history
 -- Track what users have read (for future recommendations)
