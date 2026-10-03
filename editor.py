@@ -632,14 +632,26 @@ try:
     supabase = get_supabase_client()
 
     if supabase.enabled:
-        # Create edition
-        edition_id = supabase.create_edition(
-            date.today(),
-            headline="Top 5 AI Stories",
-            description=f"Daily AI news digest for {date.today()}"
-        )
+        # Check if edition already exists for today
+        existing = supabase.client.table("editions").select("id").eq("date", str(date.today())).execute()
+
+        if existing.data:
+            # Edition exists, reuse it
+            edition_id = existing.data[0]['id']
+            print(f"[SUPABASE] Reusing existing edition {edition_id} for {date.today()}")
+        else:
+            # Create new edition
+            edition_id = supabase.create_edition(
+                date.today(),
+                headline="Top 5 AI Stories",
+                description=f"Daily AI news digest for {date.today()}"
+            )
 
         if edition_id:
+            # Delete old stories for this edition (if re-running)
+            supabase.client.table("stories").delete().eq("edition_id", edition_id).execute()
+            print(f"[SUPABASE] Cleared old stories for edition {edition_id}")
+
             # Store each story
             for story in stories:
                 supabase.store_story(edition_id, story)
