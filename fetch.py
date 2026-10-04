@@ -8,6 +8,7 @@ import feedparser
 import requests
 import json
 import yaml
+import os
 from datetime import datetime, timedelta
 from urllib.parse import urlparse
 from collections import defaultdict
@@ -17,6 +18,8 @@ import sys
 CONFIG_FILE = "sources.yaml"
 PUBLISHED_FILE = "published.json"
 SEEN_FILE = "seen.json"
+CACHE_FILE = ".feed_cache.json"
+CACHE_TTL_MINUTES = 5
 HOURS_BACK = 24
 MAX_CANDIDATES = 25
 
@@ -46,6 +49,33 @@ def load_sources():
     except FileNotFoundError:
         print("ERROR: sources.yaml not found", file=sys.stderr)
         return []
+
+def load_cache():
+    """Load cached feed results if fresh (< 5 min old)."""
+    try:
+        if not os.path.exists(CACHE_FILE):
+            return None
+        with open(CACHE_FILE, "r") as f:
+            cache = json.load(f)
+        cached_time = datetime.fromisoformat(cache.get("timestamp", "2000-01-01"))
+        age_minutes = (datetime.now() - cached_time).total_seconds() / 60
+        if age_minutes < CACHE_TTL_MINUTES:
+            return cache.get("results", None)
+    except:
+        pass
+    return None
+
+def save_cache(results):
+    """Save feed results to cache with timestamp."""
+    try:
+        cache = {
+            "timestamp": datetime.now().isoformat(),
+            "results": results
+        }
+        with open(CACHE_FILE, "w") as f:
+            json.dump(cache, f)
+    except:
+        pass
 
 # Fetching
 def fetch_rss(url):
@@ -137,6 +167,15 @@ def score_story(story, published_urls, source_count):
 # Main pipeline
 def main():
     """Main fetch and score pipeline."""
+    # Check cache first (5 min TTL)
+    cached_candidates = load_cache()
+    if cached_candidates:
+        print("[INFO] Using cached candidates (fresh within 5 min)", file=sys.stderr)
+        print("\nCANDIDATES (top 25):\n")
+        for i, c in enumerate(cached_candidates, 1):
+            print(f"{i}. {c['title']} | {c['source']} | {c['url']} | Covered by {c.get('coverage', 1)} sources | CACHED")
+        return
+
     print("[INFO] Starting fetch...", file=sys.stderr)
 
     sources = load_sources()
@@ -244,9 +283,13 @@ def main():
     # Sort by score, then by source authority
     candidates.sort(key=lambda x: (-x["score"], -x["sources_count"]))
 
+    # Save to cache for next 5 minutes
+    top_candidates = candidates[:MAX_CANDIDATES]
+    save_cache(top_candidates)
+
     # Output top candidates
     print("\nCANDIDATES (top 25):\n")
-    for i, cand in enumerate(candidates[:MAX_CANDIDATES], 1):
+    for i, cand in enumerate(top_candidates, 1):
         flag = f" | {cand['follow_up'].upper()}" if cand["follow_up"] else " | FRESH"
         print(f"{i}. [score:{cand['score']}] {cand['title'][:70]} | {cand['source'][:20]} | {cand['link'][:50]}... | {cand['summary']}{flag}")
 
