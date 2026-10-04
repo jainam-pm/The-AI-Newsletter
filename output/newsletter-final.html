@@ -760,31 +760,31 @@
                 </div>
 
                 <div class="story-intro">
-                    <div class="story-headline">${story.headline}</div>
+                    <div class="story-headline">${story.head}</div>
                     <div class="story-deck">${story.deck}</div>
                     <div class="story-byline"><strong>By The Signal desk</strong> ·  5 min read  ·  Illustrative analysis</div>
                 </div>
 
                 <div class="analysis-columns">
-                    <div class="analysis-section">
+                    ${story.scale ? `<div class="analysis-section">
                         <div class="analysis-title">A different kind of scale</div>
                         <div class="analysis-text">${story.scale}</div>
-                    </div>
-                    <div class="analysis-section">
+                    </div>` : ''}
+                    ${story.why ? `<div class="analysis-section">
                         <div class="analysis-title">Why it matters</div>
                         <div class="analysis-text">${story.why}</div>
-                    </div>
+                    </div>` : ''}
                 </div>
 
-                <div class="editorial-takeaway">
+                ${story.signal ? `<div class="editorial-takeaway">
                     <div class="editorial-takeaway-label">THE SIGNAL</div>
                     <div class="editorial-takeaway-text">${story.signal}</div>
-                </div>
+                </div>` : ''}
 
                 <div class="source-section">
                     <div class="source-details">
                         <div class="source-label">SOURCE CONTEXT</div>
-                        <div class="source-text">${story.source}</div>
+                        <div class="source-text">${story.source || 'Source pending'}</div>
                     </div>
                     <a href="#" class="read-more">Read More →</a>
                 </div>
@@ -821,7 +821,7 @@
 
                 <div class="word-section">
                     <div class="word-section-label">THE DEFINITION</div>
-                    <div class="word-section-text">${WORD.definition}</div>
+                    <div class="word-section-text">${WORD.def}</div>
                 </div>
 
                 <div class="distillation-diagram">
@@ -850,24 +850,15 @@
 
                 <div class="dictionary-rule"></div>
 
-                <div class="word-section">
+                ${WORD.why ? `<div class="word-section">
                     <div class="word-section-label">WHY IT MATTERS</div>
                     <div class="word-section-text">${WORD.why}</div>
-                </div>
+                </div>` : ''}
 
-                <div class="fact-divider"></div>
-
-                <div class="word-section">
-                    <div class="word-section-label">A FACT TO KEEP</div>
-                    <div class="word-section-text">${WORD.fact}</div>
-                </div>
-
-                <div class="word-section" style="padding-top: 8px;">
-                    <div class="word-section-label">IN A SENTENCE</div>
-                    <div class="word-highlight">"${WORD.sentence}"</div>
-                </div>
-
-                <div class="word-footer-text">${WORD.footer}</div>
+                ${WORD.tie ? `<div class="word-section" style="padding-top: 8px;">
+                    <div class="word-section-label">TIES TO TODAY'S STORIES</div>
+                    <div class="word-highlight">${WORD.tie}</div>
+                </div>` : ''}
             `;
         }
 
