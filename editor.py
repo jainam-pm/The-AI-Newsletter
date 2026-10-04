@@ -6,6 +6,7 @@ Picks 5 stories, fetches articles, writes summaries, and renders HTML
 
 import json
 import subprocess
+import sys
 from datetime import datetime, date
 import os
 import time
@@ -47,7 +48,7 @@ print("[EDITOR] Fetching candidates...")
 start_timer("fetch")
 
 result = subprocess.run(
-    ["C:\\Users\\jaina\\anaconda3\\python.exe", "fetch.py"],
+    [sys.executable, "fetch.py"],
     capture_output=True,
     text=True,
     cwd=os.getcwd()
