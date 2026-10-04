@@ -33,6 +33,10 @@ stories = [
         "head": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
         "deck": "High-profile departure signals internal discord over alignment priorities at the leading AI lab.",
         "visual": "",
+        "scale": "Safety culture within AI labs is increasingly under scrutiny. Leadership departures over governance concerns reflect broader industry tensions between rapid deployment and careful oversight.",
+        "why": "How companies handle AI safety concerns internally shapes public trust and regulatory response. This signals potential cracks in how leading organizations balance innovation with responsibility.",
+        "signal": "Culture beats process. Who leaves an organization reveals what it values.",
+        "source": "OpenAI · TechCrunch",
         "rows": [
             ["Who", "A senior safety researcher at OpenAI (4+ years tenure)"],
             ["What", "Resigned with public statement on company blog, claiming safety culture deteriorated after recent leadership changes."],
@@ -59,6 +63,10 @@ stories = [
         "head": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
         "deck": "New compact GPU system brings enterprise-grade inference to on-premises deployments, cutting API latency by 10x.",
         "visual": "",
+        "scale": "Edge compute economics are shifting dramatically. Lower-cost inference at the point of use could decentralize AI workloads and reduce cloud dependency for routine tasks.",
+        "why": "Cost-effective local inference opens new use cases in enterprise and edge scenarios. Organizations can now run powerful models without sustained cloud expenses.",
+        "signal": "The margin between edge and cloud computing is collapsing.",
+        "source": "NVIDIA · Enterprise Weekly",
         "rows": [
             ["Who", "NVIDIA, in partnership with CoreWeave"],
             ["What", "Released DGX Spark 64GB—a 4-GPU system optimized for running open-weights LLMs (Llama, Mistral) with sub-20ms latency."],
@@ -85,6 +93,10 @@ stories = [
         "head": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
         "deck": "New OS restrictions block surveillance-capable apps, raising the bar for AI agent privacy.",
         "visual": "",
+        "scale": "Platform gatekeeping on AI tools is tightening. Apple's move signals that OS-level surveillance concerns are now a major factor in feature approval, even for high-profile developers.",
+        "why": "Trust in AI tools depends on transparent data handling. Restrictions create friction but establish clear guardrails for what algorithms can access.",
+        "signal": "Privacy is becoming a platform policy, not a feature request.",
+        "source": "Apple · TechCrunch",
         "rows": [
             ["What", "macOS Sonoma 15.1 restricts Full Disk Access (FDA). Only Apple system apps and properly sandboxed third-party apps can read user files. Meta Muse now blocked."],
             ["Why", "Users reported Meta Muse recording screens without explicit consent. Apple's response: tighter gating on powerful APIs."]
@@ -106,6 +118,10 @@ stories = [
         "head": "AI Agents Now Live in Your Text Messages",
         "deck": "Claude, ChatGPT, and Gemini launch SMS integration, reaching billions of users without an app.",
         "visual": "",
+        "scale": "Messaging platforms are the new interface for AI agents. Users can now delegate tasks and decisions directly to autonomous systems within existing communication patterns.",
+        "why": "Friction drops when AI lives where people already spend time. Embedding agents in messaging could accelerate workplace adoption and normalize delegating decisions to AI.",
+        "signal": "Distribution wins over capability. The best AI is the one you already have open.",
+        "source": "TechCrunch · App Intelligence",
         "rows": [
             ["Who", "Anthropic (Claude), OpenAI (ChatGPT), Google (Gemini), Meta (Llama agents)"],
             ["What", "Multiple AI companies launched SMS-based agent access. Text a number → interact with AI agents for planning, research, and task automation."],
@@ -132,6 +148,10 @@ stories = [
         "head": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
         "deck": "After screen-recording controversy, Meta refocuses Muse AI from desktop to Ray-Ban wearables.",
         "visual": "",
+        "scale": "Meta is repositioning AI-powered computer vision from screen capture to AR hardware. The shift acknowledges that monitoring all desktop activity triggers public and regulatory alarm.",
+        "why": "Where AI observes matters as much as what it observes. Shifting to AR glasses creates optical coherence between surveillance and utility—users see what the system sees.",
+        "signal": "The form factor shapes the trust contract.",
+        "source": "Meta · TechCrunch",
         "rows": [
             ["What", "Meta discontinued Muse desktop app; launching 'Muse Glass' beta on Ray-Ban smart glasses. On-device agents, no screen recording."],
             ["Why", "Desktop Muse faced backlash for full-screen recording without user consent. AR glasses offer agent access without privacy concerns."],
@@ -189,7 +209,7 @@ except Exception as e:
 # Load newsletter template
 print("[EDITOR] Loading newsletter template...")
 try:
-    with open("output/newsletter-final.html", "r", encoding="utf-8") as f:
+    with open("newsletter-template.html", "r", encoding="utf-8") as f:
         html = f.read()
 except Exception as e:
     print(f"[ERROR] Could not load newsletter template: {e}")
