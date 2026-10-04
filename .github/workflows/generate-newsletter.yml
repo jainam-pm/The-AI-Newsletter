@@ -45,9 +45,10 @@ jobs:
           git config --local user.name "github-actions[bot]"
           git add output/newsletter-final.html published.json words_of_day.json .feed_cache.json
           git commit -m "Daily newsletter generated at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
+          git remote set-url origin https://jainam-pm:${{ secrets.GITHUB_TOKEN }}@github.com/jainam-pm/The-AI-Newsletter.git
           git push origin main
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
 
       - name: Notify on success
         if: success()
