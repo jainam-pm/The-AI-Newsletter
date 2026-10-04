@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Morning Prompt</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: #faf6eb; color: #1a1710; }
+
+        .page { display: flex; flex-direction: column; height: 100vh; }
+
+        /* Header */
+        .header { padding: 28px 48px; background: white; border-bottom: 1px solid #e0d5c7; }
+        .header h1 { font-size: 32px; font-weight: 700; }
+        .header .meta { font-size: 13px; color: #999; margin-top: 4px; }
+
+        /* Top Section: Horizontal Cards */
+        .top-section {
+            padding: 24px 48px;
+            background: #fef9f3;
+            border-bottom: 1px solid #e0d5c7;
+            overflow-x: auto;
+            overflow-y: hidden;
+            flex-shrink: 0;
+        }
+
+        .top-section::-webkit-scrollbar { height: 8px; }
+        .top-section::-webkit-scrollbar-track { background: transparent; }
+        .top-section::-webkit-scrollbar-thumb { background: #d4a04a; border-radius: 4px; }
+
+        .news-cards {
+            display: flex;
+            gap: 16px;
+            min-width: min-content;
+        }
+
+        .news-card {
+            flex-shrink: 0;
+            width: 280px;
+            padding: 20px;
+            background: white;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .news-card:hover {
+            box-shadow: 0 6px 16px rgba(0,0,0,0.1);
+            transform: translateY(-2px);
+        }
+
+        .news-card.active {
+            border-color: #d4a04a;
+            background: #fffbf7;
+        }
+
+        .card-badge {
+            display: inline-block;
+            padding: 6px 12px;
+            border-radius: 20px;
+            font-size: 10px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            width: fit-content;
+        }
+
+        .card-headline {
+            font-size: 15px;
+            font-weight: 700;
+            line-height: 1.4;
+            color: #1a1710;
+        }
+
+        .card-number {
+            font-size: 20px;
+            font-weight: 600;
+            color: #d4a04a;
+        }
+
+        /* Main Section: Expanded View */
+        .main-section {
+            flex: 1;
+            padding: 48px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 32px;
+        }
+
+        .main-section::-webkit-scrollbar { width: 8px; }
+        .main-section::-webkit-scrollbar-track { background: transparent; }
+        .main-section::-webkit-scrollbar-thumb { background: #d4a04a; border-radius: 4px; }
+
+        .story-header {
+            max-width: 900px;
+        }
+
+        .story-badge {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 16px;
+        }
+
+        .story-headline {
+            font-size: 42px;
+            font-weight: 700;
+            line-height: 1.2;
+            color: #1a1710;
+            margin-bottom: 16px;
+        }
+
+        .story-deck {
+            font-size: 18px;
+            line-height: 1.5;
+            color: #666;
+            margin-bottom: 24px;
+            max-width: 800px;
+        }
+
+        .story-content {
+            max-width: 900px;
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 32px;
+        }
+
+        .content-col { display: flex; flex-direction: column; gap: 28px; }
+
+        .detail-section { }
+        .detail-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #d4a04a;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+        .detail-content {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .narrative {
+            font-size: 15px;
+            line-height: 1.8;
+            color: #333;
+            padding: 24px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #d4a04a;
+        }
+
+        .comparison {
+            padding: 24px;
+            background: #fef9f3;
+            border-radius: 8px;
+        }
+
+        .comp-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #1a1710;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .comp-item {
+            margin-bottom: 16px;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .comp-item strong {
+            color: #1a1710;
+            font-weight: 600;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .links {
+            padding: 24px;
+            background: #fef9f3;
+            border-radius: 8px;
+        }
+
+        .links-header {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #1a1710;
+            margin-bottom: 16px;
+            letter-spacing: 1px;
+        }
+
+        .link-item {
+            margin-bottom: 10px;
+        }
+
+        .link-item a {
+            color: #2a6fa8;
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .link-item a:hover { text-decoration: underline; }
+
+        /* Vote Buttons */
+        .vote-section {
+            display: flex;
+            gap: 12px;
+            margin-top: 24px;
+        }
+
+        .vote-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: 44px;
+            height: 44px;
+            border: 1px solid #d4a04a;
+            background: white;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:hover {
+            background: #d4a04a;
+        }
+
+        .vote-btn svg {
+            width: 22px;
+            height: 22px;
+            fill: #d4a04a;
+            stroke: #d4a04a;
+            stroke-width: 0.5;
+        }
+
+        .vote-btn:hover svg {
+            fill: white;
+            stroke: white;
+        }
+
+        .word-card {
+            max-width: 900px;
+            padding: 28px;
+            background: white;
+            border-radius: 8px;
+            border-left: 4px solid #d4a04a;
+        }
+
+        .word-label {
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #d4a04a;
+            margin-bottom: 12px;
+            letter-spacing: 1px;
+        }
+
+        .word-term {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d4a04a;
+            margin-bottom: 8px;
+        }
+
+        .word-pos {
+            font-size: 13px;
+            color: #999;
+            font-style: italic;
+            margin-bottom: 16px;
+        }
+
+        .word-def {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 16px;
+        }
+
+        .word-why {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .word-why strong { color: #1a1710; }
+
+        .word-tie {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #999;
+            font-style: italic;
+            margin-top: 12px;
+            padding-top: 12px;
+            border-top: 1px solid #e0d5c7;
+        }
+
+        @media (max-width: 1200px) {
+            .main-section { padding: 32px; }
+            .story-content { grid-template-columns: 1fr; }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 20px; }
+            .top-section { padding: 16px; }
+            .news-card { width: 240px; }
+            .main-section { padding: 20px; }
+            .story-headline { font-size: 28px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <div class="header">
+            <h1>The Morning Prompt</h1>
+            <div class="meta">Daily AI news digest • October 4, 2026</div>
+        </div>
+
+        <div class="top-section">
+            <div class="news-cards" id="news-cards"></div>
+        </div>
+
+        <div class="main-section" id="main-content"></div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
+    <script>
+        const STORIES = [
+            {"id":"s1","cat":"privacy","n":"01","head":"OpenAI Safety Officer Resigns: 'Culture is Broken'","deck":"High-profile departure signals internal discord over alignment priorities at the leading AI lab.","narrative":"A senior safety researcher at OpenAI, who has spent over four years at the organization, resigned this week with a public statement claiming the company's safety culture has fundamentally deteriorated. The researcher cited frustration with what they described as the systematic deprioritization of alignment research in favor of accelerating deployment timelines. The resignation letter, published on OpenAI's official news channel, urged other researchers in the AI safety community to speak up and push for industry-wide alignment standards. This departure comes amid broader industry concerns about whether leading AI labs are balancing capability development with adequate safety validation. The timing of the resignation, following recent leadership changes at OpenAI, has sparked discussions about the company's strategic direction and commitment to responsible AI development practices.","rows":[["Who","A senior safety researcher at OpenAI (4+ years tenure)"],["What","Resigned with public statement claiming safety culture deteriorated"],["When","Effective October 3, 2026"],["Where","OpenAI (San Francisco)"],["Why","Frustration with deprioritization of alignment research"],["How","Public resignation letter urging others to speak up"]],"vs":[["Anthropic","Maintains constitutional AI approach; explicit safety-first commitment"],["DeepSeek","Rapidly scaling; minimal public safety statements; performance-focused"],["Meta","Open-weights approach; mixed safety messaging"]],"links":[["OpenAI News","https://openai.com"],["TechCrunch","https://techcrunch.com"]]},
+            {"id":"s2","cat":"models","n":"02","head":"NVIDIA DGX Spark: Local AI Inference Half the Cost","deck":"New compact GPU system brings enterprise-grade inference to on-prem deployments, cutting latency 10x.","narrative":"NVIDIA unveiled the DGX Spark 64GB, a new four-GPU system specifically engineered for running large open-weights language models on-premises with exceptional performance. In partnership with CoreWeave, the system achieves sub-20-millisecond inference latency for models like Llama 3.1 and Mistral, a dramatic improvement over cloud-based alternatives that typically incur 200+ millisecond roundtrip delays. The DGX Spark addresses a critical enterprise pain point: the cost and latency of relying on API-based inference for production workloads. Organizations can deploy the system in fully air-gapped data centers, ensuring data sovereignty and security. Shipping on October 15, 2026, the DGX Spark includes support for multi-LoRA configurations, enabling specialized agents tailored to specific business use cases without model retraining. This move represents NVIDIA's strategic push into on-premise AI infrastructure, challenging cloud providers while helping enterprises own their AI inference stack.","rows":[["Who","NVIDIA, in partnership with CoreWeave"],["What","DGX Spark 64GB - 4-GPU system for open-weights LLMs"],["When","Shipping October 15, 2026"],["Where","On-premises deployments, air-gapped data centers"],["Why","Enterprises need low-latency, cost-effective inference without vendor lock-in"],["How","Plug in, deploy via NVIDIA NIM container runtime"]],"vs":[["Apple","M4 Max MacBooks offer local inference; consumer-grade, lower throughput"],["AWS Trainium","Enterprise-scale option; higher cost; requires AWS integration"],["Azure ML","Cloud-based inference; familiar ecosystem; higher latency"]],"links":[["NVIDIA Blog","https://nvidia.com"],["DGX Spark Specs","https://nvidia.com"]]},
+            {"id":"s3","cat":"security","n":"03","head":"Apple Tightens macOS Full Disk Access After Meta Muse Controversy","deck":"New OS restrictions block surveillance-capable apps, raising the bar for AI agent privacy.","narrative":"Apple's latest macOS Sonoma 15.1 update introduces stricter controls around Full Disk Access (FDA), a powerful privilege that previously allowed applications broad read permissions across the file system. The tightening comes directly in response to user complaints about Meta's Muse desktop application, which was reported to be recording screen activity without explicit user consent. Starting with this update, only Apple's own system applications and properly sandboxed third-party applications can access Full Disk Access. This change effectively blocks Meta Muse from functioning as originally designed on newer macOS versions. The move signals Apple's growing concern about AI agent surveillance capabilities and sets a new privacy baseline for the industry. Meta has responded by pivoting Muse away from desktop entirely, instead focusing development on Ray-Ban smart glasses where on-device processing and explicit visual recording is inherent to the user experience. For users and enterprises, this update represents a significant tightening of system privacy controls.","rows":[["What","macOS 15.1 restricts Full Disk Access to sandboxed apps only"],["Why","User reports of Meta Muse recording without explicit consent"],["When","Available now"],["Where","macOS Sonoma and later versions"]],"vs":[["Microsoft Windows","Copilot Recall (live screen recording) faces backlash; launch delayed"],["Google Android 15","Agents sandboxed by default; per-app permission model"],["Meta","Pivoting Muse from desktop to Ray-Ban AR glasses"]],"links":[["TechCrunch","https://techcrunch.com"],["Apple Security","https://apple.com"]]},
+            {"id":"s4","cat":"builders","n":"04","head":"AI Agents Now Live in Your Text Messages","deck":"Claude, ChatGPT, and Gemini launch SMS integration, reaching billions without requiring an app.","narrative":"In a coordinated push to democratize AI access, Anthropic, OpenAI, Google, and Meta have launched SMS-based agent interfaces in the past week, bringing conversational AI to the roughly 2 billion people worldwide who lack smartphone-based app access or prefer simple text messaging. Anthropic's Claude SMS reached 5 million active users within 48 hours of launch, a striking testament to demand for no-friction AI access. Users can now text local numbers in 40+ countries to interact with AI agents for research, planning, creative writing, and task automation, all without downloading apps or navigating app store ecosystems. This shift is particularly significant in emerging markets where app data costs remain prohibitive but SMS is ubiquitous. For complex tasks, agents can escalate interactions to a web interface, creating a hybrid model that meets users where they are. The SMS-first approach bypasses traditional distribution bottlenecks and regulatory gatekeeping imposed by app stores, potentially reshaping how AI products reach end users globally.","rows":[["Who","Anthropic, OpenAI, Google, Meta"],["What","SMS-based AI agent access across multiple providers"],["When","Rolled out Sept 28 - Oct 2, 2026"],["Where","40+ countries with local SMS numbers"],["Why","SMS reaches 2B people; universal access without app infrastructure"],["How","Text prompts, receive responses; escalate to web for complex tasks"]],"vs":[["Mistral","Launched Mistral Agents SMS (Latin America focus); Spanish-language"],["Microsoft","Copilot SMS beta (enterprise/Microsoft 365 only)"],["Perplexity","SMS-based research interface; cited summaries via text"]],"links":[["TechCrunch","https://techcrunch.com"],["Anthropic News","https://anthropic.com"]]},
+            {"id":"s5","cat":"builders","n":"05","head":"Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash","deck":"After screen-recording backlash, Meta refocuses Muse AI from desktop to Ray-Ban wearables.","narrative":"Meta announced a strategic pivot of its Muse AI assistant away from desktop computers and toward Ray-Ban smart glasses, a move that sidesteps privacy concerns while repositioning Muse within a hardware category where screen recording is explicitly expected. The company will discontinue the Muse desktop application and launch Muse Glass as a beta feature on Ray-Ban smart glasses starting October 5, 2026. This pivot is a direct response to widespread criticism over Muse's desktop implementation, which users reported was recording screen activity without clear consent. On AR glasses, recording is inherent to the device and users expect camera-based input, eliminating the consent ambiguity. The shift also aligns with Meta's broader metaverse strategy and solves a product-market fit problem: Muse never gained meaningful adoption on desktop, but AR glasses offer a more natural interface for ambient AI agents. For users uncomfortable with desktop AI surveillance, the pivot is a win; for Meta, it preserves the Muse brand while finding a more defensible platform.","rows":[["What","Muse discontinued on desktop; launching on Ray-Ban smart glasses"],["Why","Desktop Muse faced privacy backlash for screen recording"],["When","Ray-Ban beta launches October 5, 2026"],["Where","Ray-Ban smart glasses; on-device processing"]],"vs":[["Humane AI Pin","Wearable-first AI; limited market traction; exploring pivots"],["Apple Glasses","Rumored 2027 launch; expected on-device AI support"],["Google Glass","Legacy AR platform; new AI features in early development"]],"links":[["TechCrunch","https://techcrunch.com"],["Meta Ray-Ban","https://meta.com"]]}
+        ];
+
+        const WORD = {"term":"Agentic Loop","pos":"noun · AI architecture","def":"A repeating cycle where an AI system observes its environment, makes decisions based on that observation, and executes actions to achieve defined goals—all autonomously and continuously.","why":"This is the architectural foundation of next-generation AI that moves beyond responding to prompts. Agentic systems actively work on problems, manage workflows, and interact with the world without waiting for human input between steps.","tie":"Directly relevant to today's stories: SMS agents (Story #4) bring agentic loops to billions of users. OpenAI's safety concerns (Story #1) highlight how powerful—and risky—autonomous loops can be."};
+
+        const CATS = {privacy:{label:"Agents & Privacy",color:"#7a3ea0"},models:{label:"Models",color:"#2a6fa8"},security:{label:"Security",color:"#b33425"},builders:{label:"Builders & Funding",color:"#4db87a"}};
+
+        let selectedStory = STORIES[0];
+
+        function renderNewsCards() {
+            const html = STORIES.map((story, idx) => {
+                const cat = CATS[story.cat] || {label:"News",color:"#999"};
+                return `<div class="news-card ${idx === 0 ? 'active' : ''}" onclick="selectStory('${story.id}')">
+                    <div class="card-number">${story.n}</div>
+                    <div class="card-badge" style="background-color:${cat.color}">${cat.label}</div>
+                    <div class="card-headline">${story.head}</div>
+                </div>`;
+            }).join('');
+            document.getElementById('news-cards').innerHTML = html;
+        }
+
+        function selectStory(storyId) {
+            selectedStory = STORIES.find(s => s.id === storyId);
+            document.querySelectorAll('.news-card').forEach(c => c.classList.remove('active'));
+            document.querySelector(`[onclick="selectStory('${storyId}')"]`).classList.add('active');
+            renderMainContent();
+        }
+
+        function renderMainContent() {
+            const story = selectedStory;
+            const cat = CATS[story.cat] || {label:"News",color:"#999"};
+
+            let details = '';
+            if (story.rows?.length) {
+                details = story.rows.map(r =>
+                    `<div class="detail-section"><div class="detail-label">${r[0]}</div><div class="detail-content">${r[1]}</div></div>`
+                ).join('');
+            }
+
+            let vs = '';
+            if (story.vs?.length) {
+                vs = `<div class="comparison">
+                    <div class="comp-header">How Others Compare</div>
+                    ${story.vs.map(v => `<div class="comp-item"><strong>${v[0]}</strong> ${v[1]}</div>`).join('')}
+                </div>`;
+            }
+
+            let links = '';
+            if (story.links?.length) {
+                links = `<div class="links">
+                    <div class="links-header">Read More</div>
+                    ${story.links.map(l => `<div class="link-item"><a href="${l[1]}" target="_blank">${l[0]} →</a></div>`).join('')}
+                </div>`;
+            }
+
+            const html = `
+                <div class="story-header">
+                    <div class="story-badge" style="background-color:${cat.color}">${cat.label}</div>
+                    <div class="story-headline">${story.head}</div>
+                    <div class="story-deck">${story.deck}</div>
+                    <a href="${story.links?.[0]?.[1]||'#'}" target="_blank" style="color:#2a6fa8;text-decoration:none;font-weight:600;font-size:14px;">Read full story →</a>
+                </div>
+
+                <div class="story-content">
+                    <div class="content-col">
+                        ${details}
+                    </div>
+                    <div class="content-col">
+                        <div class="narrative">${story.narrative}</div>
+                        ${vs}
+                    </div>
+                </div>
+
+                ${links}
+
+                <div class="vote-section">
+                    <button class="vote-btn" title="Upvote" onclick="vote('${story.id}','up')">
+                        <svg viewBox="0 0 24 24"><path d="M1 21h4V9H1v12zm22-11c0-1.1-.9-2-2-2h-6.31l.95-4.57.03-.32c0-.41-.17-.79-.44-1.06L14.17 1 7.59 7.59C7.22 7.95 7 8.45 7 9v10c0 1.1.9 2 2 2h9c.83 0 1.54-.5 1.84-1.22l5.15-12.15c.03-.06.04-.13.04-.2 0-1.1-.9-2-2-2z"/></svg>
+                    </button>
+                    <button class="vote-btn" title="Downvote" onclick="vote('${story.id}','down')">
+                        <svg viewBox="0 0 24 24"><path d="M1 3h4v12H1V3zm22 11c0 1.1-.9 2-2 2h-6.31l.95 4.57.03.32c0 .41-.17.79-.44 1.06L9.83 23l-6.58-6.59C2.78 16.05 2.5 15.55 2.5 15V5c0-1.1.9-2 2-2h9c.83 0 1.54.5 1.84 1.22l5.15 12.15c.03.06.04.13.04.2 0 1.1-.9 2-2 2z"/></svg>
+                    </button>
+                </div>
+
+                <div class="word-card">
+                    <div class="word-label">Word of the Day</div>
+                    <div class="word-term">${WORD.term}</div>
+                    <div class="word-pos">${WORD.pos}</div>
+                    <div class="word-def">${WORD.def}</div>
+                    <div class="word-why"><strong>Why it matters:</strong> ${WORD.why}</div>
+                    <div class="word-tie">💡 ${WORD.tie}</div>
+                </div>
+            `;
+            document.getElementById('main-content').innerHTML = html;
+        }
+
+        async function vote(storyId, type) {
+            const sessionId = localStorage.getItem('session') || ('u-' + Date.now());
+            localStorage.setItem('session', sessionId);
+
+            try {
+                let sb = null;
+                for (let i = 0; i < 10; i++) {
+                    if (window.supabase) {
+                        sb = window.supabase.createClient('https://mzsipmeuthconogugwry.supabase.co', 'sb_publishable_AHLzBSVlyyQJSKIZFD2Nyg_R2WHJfMG');
+                        break;
+                    }
+                    await new Promise(r => setTimeout(r, 100));
+                }
+
+                if (!sb) throw new Error('Supabase not loaded');
+
+                const {data:stories,error:err1} = await sb.from('stories').select('id').eq('story_id', storyId).limit(1);
+                if (err1 || !stories?.length) throw new Error('Story not found');
+
+                const {error:err2} = await sb.from('votes').insert({story_id:stories[0].id,vote_type:type,user_id:sessionId});
+                if (err2) throw err2;
+
+                console.log(`Vote recorded: ${type}`);
+            } catch(e) {
+                console.error('Vote failed:', e);
+            }
+        }
+
+        renderNewsCards();
+        renderMainContent();
+    </script>
+</body>
+</html>

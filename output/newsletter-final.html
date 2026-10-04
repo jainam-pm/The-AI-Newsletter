@@ -8,663 +8,98 @@
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         html, body { width: 100%; height: 100%; font-family: 'Inter', sans-serif; background: #f5f2e9; color: #21251f; }
-
         .container { display: flex; flex-direction: column; height: 100vh; }
-
-        /* Header */
-        .header {
-            padding: 8px 64px;
-            background: white;
-            border-bottom: none;
-            flex-shrink: 0;
-        }
-
-        .header-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 4px;
-        }
-
-        .header-left {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 11px;
-            font-weight: 600;
-            color: #254bc7;
-            letter-spacing: 0.5px;
-        }
-
+        .header { padding: 8px 64px; background: white; border-bottom: none; flex-shrink: 0; }
+        .header-top { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+        .header-left { display: flex; align-items: center; gap: 8px; font-size: 11px; font-weight: 600; color: #254bc7; letter-spacing: 0.5px; }
         .header-left img { width: 16px; height: 16px; }
-
-        .header-right {
-            font-size: 11px;
-            color: #6e7168;
-            font-weight: 400;
-            letter-spacing: 0.5px;
-        }
-
+        .header-right { font-size: 11px; color: #6e7168; font-weight: 400; letter-spacing: 0.5px; }
         .masthead-rule { width: 100%; height: 1px; background: #d1d1c5; margin: 4px 0; }
-
-        .publication-identity {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-            margin-bottom: 4px;
-        }
-
-        .editorial-promise {
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-        }
-
-        .editorial-promise-title {
-            font-size: 10px;
-            font-weight: 600;
-            color: #21251f;
-            white-space: nowrap;
-        }
-
-        .editorial-promise-text {
-            font-size: 9px;
-            font-weight: 400;
-            color: #6e7168;
-            line-height: 1.3;
-        }
-
-        .publication-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 42px;
-            font-weight: 400;
-            color: #21251f;
-            flex: 1;
-            text-align: center;
-            line-height: 1;
-        }
-
-        .publication-date {
-            flex: 0 0 auto;
-            display: flex;
-            flex-direction: column;
-            gap: 2px;
-            text-align: right;
-        }
-
-        .publication-date-label {
-            font-size: 9px;
-            font-weight: 600;
-            color: #254bc7;
-            white-space: nowrap;
-        }
-
-        .publication-date-main {
-            font-family: 'DM Serif Display', serif;
-            font-size: 14px;
-            font-weight: 400;
-            color: #21251f;
-            line-height: 1;
-        }
-
-        .publication-date-desc {
-            font-size: 8px;
-            font-weight: 400;
-            color: #6e7168;
-        }
-
-        .masthead-double-rule {
-            width: 100%;
-            height: 2px;
-            background: #d1d1c5;
-            margin-bottom: 0;
-        }
-
-        /* Top Five */
-        .top-five {
-            padding: 12px 64px;
-            background: #f5f2e9;
-            flex-shrink: 0;
-        }
-
-        .top-five-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 10px;
-            font-size: 11px;
-            font-weight: 700;
-            color: #21251f;
-        }
-
-        .top-five-header-right {
-            font-size: 11px;
-            font-weight: 400;
-            color: #6e7168;
-        }
-
-        .cards-row {
-            display: flex;
-            gap: 12px;
-        }
-
-        .card {
-            flex: 1;
-            min-width: 0;
-            background: #faf8f1;
-            border: 2px solid #d1d1c5;
-            border-radius: 0;
-            padding: 12px 14px;
-            display: flex;
-            flex-direction: column;
-            justify-content: space-between;
-            height: 160px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-
-        .card:hover {
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-        }
-
-        .card.active {
-            background: #e9edf9;
-            border-color: #254bc7;
-        }
-
-        .card-top {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            color: #6e7168;
-            margin-bottom: 8px;
-        }
-
-        .card.active .card-top {
-            color: #254bc7;
-        }
-
-        .card-num {
-            font-family: 'DM Serif Display', serif;
-            font-size: 8px;
-            font-weight: 400;
-            color: inherit;
-        }
-
-        .card-cat {
-            font-size: 10px;
-            font-weight: 600;
-            text-transform: uppercase;
-            color: #21251f;
-        }
-
-        .card-headline {
-            font-family: 'DM Serif Display', serif;
-            font-size: 23px;
-            font-weight: 400;
-            line-height: 1.16;
-            color: #21251f;
-            margin-bottom: 8px;
-            flex: 1;
-        }
-
-        .card-meta {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            font-size: 10px;
-            color: #6e7168;
-        }
-
-        .card-link {
-            display: none;
-        }
-
-        /* Main Content */
-        .main-content {
-            flex: 1;
-            padding: 20px 64px;
-            display: grid;
-            grid-template-columns: 1fr 388px;
-            gap: 30px;
-            overflow-y: auto;
-            background: white;
-        }
-
+        .publication-identity { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; margin-bottom: 4px; }
+        .editorial-promise { flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; }
+        .editorial-promise-title { font-size: 10px; font-weight: 600; color: #21251f; white-space: nowrap; }
+        .editorial-promise-text { font-size: 9px; font-weight: 400; color: #6e7168; line-height: 1.3; }
+        .publication-title { font-family: 'DM Serif Display', serif; font-size: 42px; font-weight: 400; color: #21251f; flex: 1; text-align: center; line-height: 1; }
+        .publication-date { flex: 0 0 auto; display: flex; flex-direction: column; gap: 2px; text-align: right; }
+        .publication-date-label { font-size: 9px; font-weight: 600; color: #254bc7; white-space: nowrap; }
+        .publication-date-main { font-family: 'DM Serif Display', serif; font-size: 14px; font-weight: 400; color: #21251f; line-height: 1; }
+        .publication-date-desc { font-size: 8px; font-weight: 400; color: #6e7168; }
+        .masthead-double-rule { width: 100%; height: 2px; background: #d1d1c5; margin-bottom: 0; }
+        .top-five { padding: 12px 64px; background: #f5f2e9; flex-shrink: 0; }
+        .top-five-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px; font-size: 11px; font-weight: 700; color: #21251f; }
+        .top-five-header-right { font-size: 11px; font-weight: 400; color: #6e7168; }
+        .cards-row { display: flex; gap: 12px; }
+        .card { flex: 1; min-width: 0; background: #faf8f1; border: 2px solid #d1d1c5; border-radius: 0; padding: 12px 14px; display: flex; flex-direction: column; justify-content: space-between; height: 160px; cursor: pointer; transition: all 0.3s; }
+        .card:hover { box-shadow: 0 2px 4px rgba(0,0,0,0.1); }
+        .card.active { background: #e9edf9; border-color: #254bc7; }
+        .card-top { display: flex; justify-content: space-between; align-items: flex-start; color: #6e7168; margin-bottom: 8px; }
+        .card.active .card-top { color: #254bc7; }
+        .card-num { font-family: 'DM Serif Display', serif; font-size: 8px; font-weight: 400; color: inherit; }
+        .card-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; color: white; padding: 4px 8px; border-radius: 3px; display: inline-block; }
+        .card-cat[data-cat="privacy"] { background: #7a3ea0; }
+        .card-cat[data-cat="models"] { background: #2a6fa8; }
+        .card-cat[data-cat="security"] { background: #b33425; }
+        .card-cat[data-cat="builders"] { background: #4db87a; }
+        .card-headline { font-family: 'DM Serif Display', serif; font-size: 23px; font-weight: 400; line-height: 1.16; color: #21251f; margin-bottom: 8px; flex: 1; }
+        .card-meta { display: flex; flex-direction: column; gap: 8px; font-size: 10px; color: #6e7168; }
+        .card-meta > div { display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+        .main-content { flex: 1; padding: 20px 64px; display: grid; grid-template-columns: 1fr; gap: 30px; overflow-y: auto; background: white; }
         .main-content::-webkit-scrollbar { width: 8px; }
         .main-content::-webkit-scrollbar-track { background: transparent; }
         .main-content::-webkit-scrollbar-thumb { background: #d1d1c5; border-radius: 4px; }
-
-        /* Story Column */
         .story-col { }
-
-        .story-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 12px;
-            font-size: 11px;
-            font-weight: 700;
-        }
-
-        .story-header-left {
-            color: #254bc7;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .story-header-right {
-            color: #6e7168;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 400;
-        }
-
-        .story-intro {
-            display: flex;
-            flex-direction: column;
-            gap: 8px;
-            margin-bottom: 12px;
-        }
-
-        .story-headline {
-            font-family: 'DM Serif Display', serif;
-            font-size: 46px;
-            font-weight: 400;
-            line-height: 1.08;
-            color: #21251f;
-        }
-
-        .story-deck {
-            font-size: 17px;
-            font-weight: 400;
-            line-height: 1.5;
-            color: #6e7168;
-        }
-
-        .story-byline {
-            display: flex;
-            gap: 10px;
-            align-items: baseline;
-            font-size: 11px;
-            color: #6e7168;
-        }
-
-        .story-byline strong {
-            color: #21251f;
-            font-weight: 600;
-        }
-
-        .story-image {
-            width: 100%;
-            height: 180px;
-            background: #e8e2d8;
-            margin-bottom: 6px;
-            object-fit: cover;
-        }
-
-        .story-image-caption {
-            display: flex;
-            justify-content: space-between;
-            font-size: 10px;
-            color: #6e7168;
-            margin-bottom: 12px;
-        }
-
-        .analysis-columns {
-            display: grid;
-            grid-template-columns: 1fr 1fr;
-            gap: 16px;
-            margin-bottom: 12px;
-        }
-
-        .analysis-section {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-        }
-
-        .analysis-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 23px;
-            font-weight: 400;
-            color: #21251f;
-            white-space: nowrap;
-        }
-
-        .analysis-text {
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1.65;
-            color: #21251f;
-        }
-
-        .editorial-takeaway {
-            background: #ece9df;
-            border-left: 3px solid #254bc7;
-            padding: 10px 10px 10px 14px;
-            display: flex;
-            gap: 12px;
-            align-items: flex-start;
-            margin-bottom: 12px;
-        }
-
-        .editorial-takeaway-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: #254bc7;
-            text-transform: uppercase;
-            white-space: nowrap;
-            padding-top: 3px;
-        }
-
-        .editorial-takeaway-text {
-            font-family: 'DM Serif Display', serif;
-            font-size: 20px;
-            font-weight: 400;
-            line-height: 1.3;
-            color: #21251f;
-            flex: 1;
-        }
-
-        .source-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            margin-bottom: 10px;
-            gap: 20px;
-        }
-
-        .source-details {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .source-label {
-            font-size: 10px;
-            font-weight: 600;
-            color: #6e7168;
-            text-transform: uppercase;
-            white-space: nowrap;
-        }
-
-        .source-text {
-            font-size: 12px;
-            font-weight: 400;
-            color: #21251f;
-        }
-
-        .read-more {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            color: #254bc7;
-            text-decoration: none;
-            font-size: 12px;
-            font-weight: 600;
-            text-transform: uppercase;
-        }
-
-        .read-more:hover { text-decoration: underline; }
-
-        .read-more img { width: 16px; height: 16px; }
-
+        .story-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 12px; font-size: 11px; font-weight: 700; }
+        .story-header-left { color: #254bc7; text-transform: uppercase; letter-spacing: 0.5px; }
+        .story-header-right { color: #6e7168; text-transform: uppercase; letter-spacing: 0.5px; font-weight: 400; }
+        .story-intro { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+        .story-headline { font-family: 'DM Serif Display', serif; font-size: 46px; font-weight: 400; line-height: 1.08; color: #21251f; }
+        .story-deck { font-size: 17px; font-weight: 400; line-height: 1.5; color: #6e7168; }
+        .story-byline { display: flex; gap: 10px; align-items: baseline; font-size: 11px; color: #6e7168; }
+        .story-byline strong { color: #21251f; font-weight: 600; }
+        .analysis-columns { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 12px; }
+        .analysis-section { display: flex; flex-direction: column; gap: 9px; }
+        .analysis-title { font-family: 'DM Serif Display', serif; font-size: 23px; font-weight: 400; color: #21251f; white-space: nowrap; }
+        .analysis-text { font-size: 14px; font-weight: 400; line-height: 1.65; color: #21251f; }
+        .editorial-takeaway { background: #ece9df; border-left: 3px solid #254bc7; padding: 10px 10px 10px 14px; display: flex; gap: 12px; align-items: flex-start; margin-bottom: 12px; }
+        .editorial-takeaway-label { font-size: 10px; font-weight: 700; color: #254bc7; text-transform: uppercase; white-space: nowrap; padding-top: 3px; }
+        .editorial-takeaway-text { font-family: 'DM Serif Display', serif; font-size: 20px; font-weight: 400; line-height: 1.3; color: #21251f; flex: 1; }
+        .source-section { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 10px; gap: 20px; }
+        .source-details { display: flex; flex-direction: column; gap: 4px; }
+        .source-label { font-size: 10px; font-weight: 600; color: #6e7168; text-transform: uppercase; white-space: nowrap; }
+        .source-text { font-size: 12px; font-weight: 400; color: #21251f; }
         .feedback-rule { width: 100%; height: 1px; background: #d1d1c5; margin: 10px 0; }
-
-        .feedback-section {
-            display: flex;
-            justify-content: space-between;
-            align-items: flex-start;
-            gap: 20px;
-        }
-
-        .feedback-prompt {
-            display: flex;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .feedback-question {
-            font-size: 13px;
-            font-weight: 600;
-            color: #21251f;
-        }
-
-        .feedback-desc {
-            font-size: 11px;
-            font-weight: 400;
-            color: #6e7168;
-        }
-
-        .vote-buttons {
-            display: flex;
-            gap: 8px;
-        }
-
-        .vote-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 10px 13px;
-            border: 1px solid;
-            border-radius: 4px;
-            background: white;
-            cursor: pointer;
-            font-size: 12px;
-            font-weight: 600;
-            transition: all 0.2s;
-            text-transform: capitalize;
-        }
-
-        .vote-btn.upvote {
-            border-color: #254bc7;
-            color: #254bc7;
-            background: #e9edf9;
-        }
-
-        .vote-btn.upvote:hover {
-            background: #d9e2f9;
-        }
-
-        .vote-btn.downvote {
-            border-color: #d1d1c5;
-            color: #21251f;
-            background: #f5f2e9;
-        }
-
-        .vote-btn.downvote:hover {
-            background: #ece9df;
-        }
-
-        .vote-btn img { width: 17px; height: 17px; }
-
-        /* Word of the Day */
-        .word-col {
-            background: #ece9df;
-            border-left: 1px solid #d1d1c5;
-            padding: 28px;
-            display: flex;
-            flex-direction: column;
-            gap: 24px;
-            height: 100%;
-            border-radius: 0;
-            overflow-y: auto;
-        }
-
-        .word-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding-bottom: 12px;
-            border-bottom: 1px solid #d1d1c5;
-        }
-
-        .word-label {
-            font-size: 11px;
-            font-weight: 700;
-            color: #21251f;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
+        .feedback-section { display: flex; justify-content: space-between; align-items: flex-start; gap: 20px; }
+        .feedback-prompt { display: flex; flex-direction: column; gap: 4px; }
+        .feedback-question { font-size: 13px; font-weight: 600; color: #21251f; }
+        .feedback-desc { font-size: 11px; font-weight: 400; color: #6e7168; }
+        .vote-buttons { display: flex; gap: 8px; }
+        .vote-btn { display: flex; align-items: center; gap: 8px; padding: 10px 13px; border: 1px solid; border-radius: 4px; background: white; cursor: pointer; font-size: 12px; font-weight: 600; transition: all 0.2s; text-transform: capitalize; }
+        .vote-btn.upvote { border-color: #254bc7; color: #254bc7; background: #e9edf9; }
+        .vote-btn.upvote:hover { background: #d9e2f9; }
+        .vote-btn.downvote { border-color: #d1d1c5; color: #21251f; background: #f5f2e9; }
+        .vote-btn.downvote:hover { background: #ece9df; }
+        .word-col { background: #ece9df; border-left: 1px solid #d1d1c5; padding: 28px; display: flex; flex-direction: column; gap: 24px; height: 100%; border-radius: 0; overflow-y: auto; }
+        .word-header { display: flex; justify-content: space-between; align-items: center; padding-bottom: 12px; border-bottom: 1px solid #d1d1c5; }
+        .word-label { font-size: 11px; font-weight: 700; color: #21251f; text-transform: uppercase; letter-spacing: 0.5px; }
         .word-icon { width: 19px; height: 19px; cursor: pointer; }
-
-        .word-term {
-            font-family: 'DM Serif Display', serif;
-            font-size: 43px;
-            font-weight: 400;
-            color: #254bc7;
-            line-height: 1.1;
-        }
-
-        .word-pos {
-            font-size: 12px;
-            font-weight: 400;
-            color: #6e7168;
-            font-style: italic;
-        }
-
-        .word-section {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-        }
-
-        .word-section-label {
-            font-size: 10px;
-            font-weight: 700;
-            color: #254bc7;
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-        }
-
-        .word-section-text {
-            font-size: 14px;
-            font-weight: 400;
-            line-height: 1.65;
-            color: #21251f;
-        }
-
-        .distillation-diagram {
-            background: #f5f2e9;
-            padding: 18px 8px;
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            align-items: center;
-        }
-
-        .knowledge-transfer {
-            display: flex;
-            align-items: flex-end;
-            justify-content: center;
-            gap: 0;
-            width: 100%;
-        }
-
-        .model-column {
-            display: flex;
-            flex-direction: column;
-            gap: 9px;
-            align-items: center;
-            width: 88px;
-        }
-
-        .model-icon { width: 56px; height: 56px; }
-        .model-icon.compact { width: 32px; height: 32px; }
-        .model-label { font-size: 10px; font-weight: 600; color: #21251f; white-space: nowrap; }
-
-        .transfer-arrow {
-            width: 54px;
-            height: 20px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            flex-direction: column;
-            gap: 4px;
-        }
-
-        .transfer-arrow img { width: 54px; height: 20px; }
-        .transfer-label { font-size: 9px; font-weight: 400; color: #6e7168; }
-
-        .diagram-caption {
-            font-family: 'DM Serif Display', serif;
-            font-style: italic;
-            font-size: 17px;
-            color: #6e7168;
-            text-align: center;
-        }
-
-        .dictionary-rule { width: 100%; height: 1px; background: #d1d1c5; margin: 0; }
-        .fact-divider { width: 100%; height: 1px; background: #d1d1c5; margin: 0; }
-
-        .word-highlight {
-            background: transparent;
-            font-style: italic;
-            font-family: 'DM Serif Display', serif;
-            font-size: 22px;
-            line-height: 1.35;
-            color: #21251f;
-        }
-
-        .word-footer-text {
-            font-size: 10px;
-            font-weight: 400;
-            color: #6e7168;
-            line-height: 1.5;
-        }
-
-        /* Footer */
-        .footer {
-            padding: 16px 64px;
-            background: white;
-            border-top: none;
-            flex-shrink: 0;
-        }
-
+        .word-term { font-family: 'DM Serif Display', serif; font-size: 43px; font-weight: 400; color: #254bc7; line-height: 1.1; }
+        .word-pos { font-size: 12px; font-weight: 400; color: #6e7168; font-style: italic; }
+        .word-section { display: flex; flex-direction: column; gap: 10px; }
+        .word-section-label { font-size: 10px; font-weight: 700; color: #254bc7; text-transform: uppercase; letter-spacing: 0.5px; }
+        .word-section-text { font-size: 14px; font-weight: 400; line-height: 1.65; color: #21251f; }
+        .word-highlight { background: transparent; font-style: italic; font-family: 'DM Serif Display', serif; font-size: 22px; line-height: 1.35; color: #21251f; }
+        .word-footer-text { font-size: 10px; font-weight: 400; color: #6e7168; line-height: 1.5; }
+        .footer { padding: 16px 64px; background: white; border-top: none; flex-shrink: 0; }
         .footer-closing-rule { width: 100%; height: 1px; background: #d1d1c5; margin-bottom: 16px; }
-
-        .footer-content {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            gap: 20px;
-            font-size: 11px;
-            white-space: nowrap;
-        }
-
-        .footer-title {
-            font-family: 'DM Serif Display', serif;
-            font-size: 22px;
-            font-weight: 400;
-            color: #21251f;
-        }
-
-        .footer-text {
-            font-weight: 400;
-            color: #6e7168;
-            flex: 1;
-            text-align: center;
-        }
-
-        .footer-link {
-            font-weight: 400;
-            color: #254bc7;
-            text-decoration: none;
-        }
-
-        @media (max-width: 1200px) {
-            .main-content { grid-template-columns: 1fr; }
-            .word-col { border-left: none; border-top: 1px solid #d1d1c5; }
-        }
+        .footer-content { display: flex; justify-content: space-between; align-items: center; gap: 20px; font-size: 11px; white-space: nowrap; }
+        .footer-title { font-family: 'DM Serif Display', serif; font-size: 22px; font-weight: 400; color: #21251f; }
+        .footer-text { font-weight: 400; color: #6e7168; flex: 1; text-align: center; }
+        .footer-link { font-weight: 400; color: #254bc7; text-decoration: none; }
+        @media (max-width: 1200px) { .main-content { grid-template-columns: 1fr; } .word-col { border-left: none; border-top: 1px solid #d1d1c5; } }
     </style>
 </head>
 <body>
     <div class="container">
-        <!-- Header -->
         <div class="header">
             <div class="header-top">
                 <div class="header-left">
@@ -675,9 +110,7 @@
                 </div>
                 <div class="header-right">SAMPLE EDITION  /  VOL. 01, NO. 024</div>
             </div>
-
             <div class="masthead-rule"></div>
-
             <div class="publication-identity">
                 <div class="editorial-promise">
                     <div class="editorial-promise-title">Five stories. One smarter day.</div>
@@ -692,11 +125,8 @@
                     <div class="publication-date-desc">A little clarity in 8 minutes</div>
                 </div>
             </div>
-
             <div class="masthead-double-rule"></div>
         </div>
-
-        <!-- Top Five -->
         <div class="top-five">
             <div class="top-five-header">
                 <div>THE TOP FIVE</div>
@@ -704,14 +134,10 @@
             </div>
             <div class="cards-row" id="cards-container"></div>
         </div>
-
-        <!-- Main Content -->
         <div class="main-content">
             <div class="story-col" id="story-container"></div>
             <div class="word-col" id="word-container"></div>
         </div>
-
-        <!-- Footer -->
         <div class="footer">
             <div class="footer-closing-rule"></div>
             <div class="footer-content">
@@ -724,10 +150,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
     <script>
-        const STORIES = [{"id": "s1", "cat": "privacy", "n": "01", "head": "OpenAI Safety Officer Resigns: 'Culture is Broken'", "deck": "High-profile departure signals internal discord over alignment priorities at the leading AI lab.", "visual": "", "rows": [["Who", "A senior safety researcher at OpenAI (4+ years tenure)"], ["What", "Resigned with public statement on company blog, claiming safety culture deteriorated after recent leadership changes."], ["When", "Effective October 3, 2026. Announcement posted this morning."], ["Where", "OpenAI (San Francisco); statement published on OpenAI's news page."], ["Why", "Researcher cited frustration with deprioritization of alignment research and pressure to accelerate deployment over safety validation."], ["How", "Public resignation letter urging others in AI safety to 'speak up' and align labs to shift focus back to safety."], ["Before \u2192 Now", "Before: OpenAI emphasized safety research post-GPT-5. Now: Departing safety researchers claim that's reversed."]], "vs": [["Anthropic", "Maintains constitutional AI approach; public commitment to safety-first development; no recent departures reported."], ["DeepSeek", "Rapidly scaling; minimal public safety commitments; focus on performance benchmarks."], ["Meta", "Open-weights approach; 'responsible AI' initiatives; some safety researchers joining competitors."]], "links": [["OpenAI News", "https://openai.com/news/"], ["TechCrunch Coverage", "https://techcrunch.com/2026/10/03/openai-safety-em..."]]}, {"id": "s2", "cat": "models", "n": "02", "head": "NVIDIA DGX Spark: Local AI Inference Half the Cost", "deck": "New compact GPU system brings enterprise-grade inference to on-premises deployments, cutting API latency by 10x.", "visual": "", "rows": [["Who", "NVIDIA, in partnership with CoreWeave"], ["What", "Released DGX Spark 64GB\u2014a 4-GPU system optimized for running open-weights LLMs (Llama, Mistral) with sub-20ms latency."], ["When", "Announced today; shipping October 15, 2026."], ["Where", "On-premises (data-center safe, fully air-gapped). Works with open-weights models."], ["Why", "Enterprises want local inference to avoid cloud API latency (200ms+) and per-token costs. DGX Spark cuts both."], ["How", "Plug in, deploy model, run inference via NVIDIA NIM container runtime. Multi-LoRA support for specialized agents."], ["Before \u2192 Now", "Before: Teams run inference in cloud (slow/expensive) or build custom servers (complex). Now: Turnkey local system designed for agentic workloads."]], "vs": [["Apple", "M4 Max MacBooks run 7B models locally; no API required; consumer-grade, lower throughput."], ["AWS Trainium", "Higher cost; designed for larger-scale deployments; more complex setup."], ["Azure ML", "Cloud-based inference; familiar to enterprises; higher latency than on-prem."]], "links": [["NVIDIA Blog", "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6..."], ["NVIDIA DGX Spark Spec Sheet", "https://www.nvidia.com/en-us/data-center/dgx-spark/"]]}, {"id": "s3", "cat": "security", "n": "03", "head": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy", "deck": "New OS restrictions block surveillance-capable apps, raising the bar for AI agent privacy.", "visual": "", "rows": [["What", "macOS Sonoma 15.1 restricts Full Disk Access (FDA). Only Apple system apps and properly sandboxed third-party apps can read user files. Meta Muse now blocked."], ["Why", "Users reported Meta Muse recording screens without explicit consent. Apple's response: tighter gating on powerful APIs."]], "vs": [["Microsoft Windows", "Copilot Recall (live screen recording) faces backlash; launch delayed pending privacy clarity."], ["Google Android 15", "Agents sandboxed by default; requires per-app permissions."], ["Meta", "Muse pivot away from desktop toward AR glasses (Ray-Ban), where recording is explicit."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/apple-says-its-t..."], ["Apple Security & Privacy Updates", "https://www.apple.com/security/"]]}, {"id": "s4", "cat": "builders", "n": "04", "head": "AI Agents Now Live in Your Text Messages", "deck": "Claude, ChatGPT, and Gemini launch SMS integration, reaching billions of users without an app.", "visual": "", "rows": [["Who", "Anthropic (Claude), OpenAI (ChatGPT), Google (Gemini), Meta (Llama agents)"], ["What", "Multiple AI companies launched SMS-based agent access. Text a number \u2192 interact with AI agents for planning, research, and task automation."], ["When", "Rolled out Sept 28 \u2013 Oct 2, 2026. Claude SMS reached 5M users in 48 hours."], ["Where", "Global SMS access. US: +1-415-CLAUDE-1. 40 countries with local numbers. No app download required."], ["Why", "SMS reaches 2B people without smartphones. Bypasses app-store review and distribution friction. Universal interface."], ["How", "Text a prompt. Agents respond with summaries, itineraries, code, research. For complex tasks, escalate to web or request clarification via SMS."], ["Before \u2192 Now", "Before: Agents required websites or apps. Now: Agents work on any phone, even feature phones (SMS only). Market expands from 1.5B app users to 2B SMS users."]], "vs": [["Mistral", "Launched Mistral Agents SMS (Latin America first); Spanish-language focus."], ["Microsoft", "Copilot SMS beta (enterprise/Microsoft 365 only); focused on Outlook/Teams tasks."], ["Perplexity", "SMS search: text research questions, get cited summaries."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/03/all-the-ai-agent..."], ["Anthropic Announcement", "https://www.anthropic.com/news"]]}, {"id": "s5", "cat": "builders", "n": "05", "head": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash", "deck": "After screen-recording controversy, Meta refocuses Muse AI from desktop to Ray-Ban wearables.", "visual": "", "rows": [["What", "Meta discontinued Muse desktop app; launching 'Muse Glass' beta on Ray-Ban smart glasses. On-device agents, no screen recording."], ["Why", "Desktop Muse faced backlash for full-screen recording without user consent. AR glasses offer agent access without privacy concerns."], ["When", "Muse Glass available to Ray-Ban beta users starting October 5, 2026."]], "vs": [["Humane AI Pin", "Wearable agent; limited uptake; exploring pivots."], ["Apple Glasses", "Rumored 2027 launch; expected on-device agent support."], ["Google Glass", "Legacy AR; new AI features in development."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/meta-wants-you-t..."], ["Meta Ray-Ban Smart Glasses", "https://www.meta.com/smart-glasses/"]]}];
-        const WORD = {"term": "Constitutional AI", "pos": "noun \u00c2\u00b7 AI alignment approach", "def": "Training AI systems using a constitution (set of principles) rather than human feedback alone.", "why": "Offers scalable alignment: teach principles once, apply to infinite behaviors.", "tie": "Directly referenced in Story #1 (OpenAI departures) and Story #3 (Apple's tighter security)."};
-
-        // Store vote counts by story ID (fetched from Supabase)
+        const STORIES = [{"id": "s1", "cat": "privacy", "n": "01", "head": "OpenAI Safety Officer Resigns: 'Culture is Broken'", "deck": "High-profile departure signals internal discord over alignment priorities at the leading AI lab.", "visual": "", "scale": "WHO: Senior safety researcher (4+ years at OpenAI).\\n\\nWHAT: Public resignation citing deteriorating safety culture after recent leadership changes.\\n\\nWHEN: October 3, 2026.\\n\\nWHERE: OpenAI (San Francisco), announcement on official news channel.\\n\\nWHY: Frustration with deprioritization of alignment research. Pressure to accelerate deployment over safety validation.\\n\\nHOW: Public statement urging other researchers to speak up.\\n\\nPREVIOUSLY: OpenAI positioned as safety-first. Public commitments to alignment work and Constitutional AI.\\n\\nNOW: Shift toward faster deployment. Safety-first commitments deprioritized. Fundamental tension: speed vs. safety. High-demand talent departing signals genuine cultural change.", "why": "How companies handle AI safety concerns internally shapes public trust and regulatory response. When senior researchers depart citing safety concerns, it signals potential cracks in organizational values. This matters because it may influence regulatory scrutiny, talent retention across the industry, and public perception of AI development priorities.", "signal": "Culture beats process. Who leaves an organization reveals what it values.", "source": "OpenAI \u00b7 TechCrunch", "rows": [["Who", "A senior safety researcher at OpenAI (4+ years tenure)"], ["What", "Resigned with public statement on company blog, claiming safety culture deteriorated after recent leadership changes."], ["When", "Effective October 3, 2026. Announcement posted this morning."], ["Where", "OpenAI (San Francisco); statement published on OpenAI's news page."], ["Why", "Researcher cited frustration with deprioritization of alignment research and pressure to accelerate deployment over safety validation."], ["How", "Public resignation letter urging others in AI safety to 'speak up' and align labs to shift focus back to safety."], ["Before \u2192 Now", "Before: OpenAI emphasized safety research post-GPT-5. Now: Departing safety researchers claim that's reversed."]], "vs": [["Anthropic", "Maintains constitutional AI approach; public commitment to safety-first development; no recent departures reported."], ["DeepSeek", "Rapidly scaling; minimal public safety commitments; focus on performance benchmarks."], ["Meta", "Open-weights approach; 'responsible AI' initiatives; some safety researchers joining competitors."]], "links": [["OpenAI News", "https://openai.com/news/"], ["TechCrunch Coverage", "https://techcrunch.com/2026/10/03/openai-safety-em..."]]}, {"id": "s2", "cat": "models", "n": "02", "head": "NVIDIA DGX Spark: Local AI Inference Half the Cost", "deck": "New compact GPU system brings enterprise-grade inference to on-premises deployments, cutting API latency by 10x.", "visual": "", "scale": "WHO: NVIDIA + CoreWeave partnership.\\n\\nWHAT: DGX Spark 64GB\u20144-GPU system for open-weights LLMs (Llama, Mistral) with sub-20ms latency.\\n\\nWHEN: Announced today, shipping October 15, 2026.\\n\\nWHERE: On-premises, air-gapped data centers.\\n\\nWHY: Two enterprise problems: (1) Cloud latency >200ms, (2) per-token costs at scale. DGX Spark solves both.\\n\\nHOW: Plug in, deploy models via NVIDIA NIM, run with 10x lower latency and reduced costs. Supports multi-LoRA.\\n\\nPREVIOUSLY: Cloud inference (slow/expensive) OR custom servers (complex/expensive).\\n\\nSHIFT: Turnkey solution. Changes economics. Local-first beats cloud-dependent.", "why": "Cost-effective local inference opens new use cases in enterprise and edge scenarios. It reduces dependency on cloud providers, improves latency for real-time AI agents, and enables organizations to keep sensitive data on-premises while still accessing powerful AI capabilities.", "signal": "The margin between edge and cloud computing is collapsing.", "source": "NVIDIA \u00b7 Enterprise Weekly", "rows": [["Who", "NVIDIA, in partnership with CoreWeave"], ["What", "Released DGX Spark 64GB\u2014a 4-GPU system optimized for running open-weights LLMs (Llama, Mistral) with sub-20ms latency."], ["When", "Announced today; shipping October 15, 2026."], ["Where", "On-premises (data-center safe, fully air-gapped). Works with open-weights models."], ["Why", "Enterprises want local inference to avoid cloud API latency (200ms+) and per-token costs. DGX Spark cuts both."], ["How", "Plug in, deploy model, run inference via NVIDIA NIM container runtime. Multi-LoRA support for specialized agents."], ["Before \u2192 Now", "Before: Teams run inference in cloud (slow/expensive) or build custom servers (complex). Now: Turnkey local system designed for agentic workloads."]], "vs": [["Apple", "M4 Max MacBooks run 7B models locally; no API required; consumer-grade, lower throughput."], ["AWS Trainium", "Higher cost; designed for larger-scale deployments; more complex setup."], ["Azure ML", "Cloud-based inference; familiar to enterprises; higher latency than on-prem."]], "links": [["NVIDIA Blog", "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6..."], ["NVIDIA DGX Spark Spec Sheet", "https://www.nvidia.com/en-us/data-center/dgx-spark/"]]}, {"id": "s3", "cat": "security", "n": "03", "head": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy", "deck": "New OS restrictions block surveillance-capable apps, raising the bar for AI agent privacy.", "visual": "", "scale": "WHO: Apple (macOS 15.1). Triggered by: Meta Muse recording without consent.\\n\\nWHAT: Full Disk Access (FDA) now restricted. Only Apple apps + sandboxed third-party apps. Meta Muse blocked.\\n\\nWHEN: Available now.\\n\\nWHERE: macOS Sonoma and future.\\n\\nWHY: Privacy concerns. High-profile developer using OS permissions without explicit user consent.\\n\\nHOW: Apple tightened gates. Stricter sandboxing requirements.\\n\\nPREVIOUSLY: FDA available to productivity tools with minimal guardrails.\\n\\nSHIFT: OS-level privacy policy enforcement. AI capabilities trigger security tightening.", "why": "Trust in AI tools depends on transparent data handling and user control. As AI agents become more capable and autonomous, OS-level restrictions establish clear guardrails. This shapes how AI tools can operate in the future\u2014more transparent, with explicit user consent.", "signal": "Privacy is becoming a platform policy, not a feature request.", "source": "Apple \u00b7 TechCrunch", "rows": [["What", "macOS Sonoma 15.1 restricts Full Disk Access (FDA). Only Apple system apps and properly sandboxed third-party apps can read user files. Meta Muse now blocked."], ["Why", "Users reported Meta Muse recording screens without explicit consent. Apple's response: tighter gating on powerful APIs."]], "vs": [["Microsoft Windows", "Copilot Recall (live screen recording) faces backlash; launch delayed pending privacy clarity."], ["Google Android 15", "Agents sandboxed by default; requires per-app permissions."], ["Meta", "Muse pivot away from desktop toward AR glasses (Ray-Ban), where recording is explicit."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/apple-says-its-t..."], ["Apple Security & Privacy Updates", "https://www.apple.com/security/"]]}, {"id": "s4", "cat": "builders", "n": "04", "head": "AI Agents Now Live in Your Text Messages", "deck": "Claude, ChatGPT, and Gemini launch SMS integration, reaching billions of users without an app.", "visual": "", "scale": "WHO: Anthropic, OpenAI, Google, Meta, and others.\\n\\nWHAT: SMS-based agent access. Text a number \u2192 AI responds. Planning, research, code, automation.\\n\\nWHEN: Sept 28 - Oct 2, 2026. Claude SMS: 5M users in 48h.\\n\\nWHERE: 40+ countries with local numbers. Works on any phone (feature phones, smartphones).\\n\\nWHY: SMS reaches 2B users without app downloads. Bypasses app-store friction. Market expands 1.5B \u2192 2B users (33% growth).\\n\\nHOW: Text prompt \u2192 AI responds. Escalates to web for complex tasks.\\n\\nPREVIOUSLY: Agents required apps/websites (barriers for feature phones).\\n\\nSHIFT: Distribution beats capability. Best AI = one you already have (SMS). Democratizes access.", "why": "Friction drops when AI lives where people already spend time. SMS is the only universal communication channel across all phones and markets. This could accelerate global AI adoption, especially in markets where smartphone penetration is lower.", "signal": "Distribution wins over capability. The best AI is the one you already have open.", "source": "TechCrunch \u00b7 App Intelligence", "rows": [["Who", "Anthropic (Claude), OpenAI (ChatGPT), Google (Gemini), Meta (Llama agents)"], ["What", "Multiple AI companies launched SMS-based agent access. Text a number \u2192 interact with AI agents for planning, research, and task automation."], ["When", "Rolled out Sept 28 \u2013 Oct 2, 2026. Claude SMS reached 5M users in 48 hours."], ["Where", "Global SMS access. US: +1-415-CLAUDE-1. 40 countries with local numbers. No app download required."], ["Why", "SMS reaches 2B people without smartphones. Bypasses app-store review and distribution friction. Universal interface."], ["How", "Text a prompt. Agents respond with summaries, itineraries, code, research. For complex tasks, escalate to web or request clarification via SMS."], ["Before \u2192 Now", "Before: Agents required websites or apps. Now: Agents work on any phone, even feature phones (SMS only). Market expands from 1.5B app users to 2B SMS users."]], "vs": [["Mistral", "Launched Mistral Agents SMS (Latin America first); Spanish-language focus."], ["Microsoft", "Copilot SMS beta (enterprise/Microsoft 365 only); focused on Outlook/Teams tasks."], ["Perplexity", "SMS search: text research questions, get cited summaries."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/03/all-the-ai-agent..."], ["Anthropic Announcement", "https://www.anthropic.com/news"]]}, {"id": "s5", "cat": "builders", "n": "05", "head": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash", "deck": "After screen-recording controversy, Meta refocuses Muse AI from desktop to Ray-Ban wearables.", "visual": "", "scale": "WHO: Meta (AR/wearables strategy).\\n\\nWHAT: Discontinue Muse desktop. Launch Muse Glass on Ray-Ban\u2014on-device agents, no screen recording.\\n\\nWHEN: Oct 5, 2026 (Ray-Ban beta).\\n\\nWHERE: Desktop \u2192 physical wearables.\\n\\nWHY: Desktop Muse privacy backlash. Recording without explicit consent. Public/regulatory pressure made it untenable.\\n\\nHOW: On-device processing on Ray-Ban. Camera limited to field of view (not full desktop). User controls recording.\\n\\nPREVIOUSLY: Desktop Muse = always-on observation for productivity.\\n\\nSHIFT: Form factor shapes trust. AR glasses = natural boundaries. Camera sees what user sees. Resolves surveillance anxiety.", "why": "Where AI observes matters as much as what it observes. AR glasses create a visible, physical boundary between observation and privacy. This could be a template for building trust in AI surveillance: make it visible, make it limited, make it aligned with user perspective.", "signal": "The form factor shapes the trust contract.", "source": "Meta \u00b7 TechCrunch", "rows": [["What", "Meta discontinued Muse desktop app; launching 'Muse Glass' beta on Ray-Ban smart glasses. On-device agents, no screen recording."], ["Why", "Desktop Muse faced backlash for full-screen recording without user consent. AR glasses offer agent access without privacy concerns."], ["When", "Muse Glass available to Ray-Ban beta users starting October 5, 2026."]], "vs": [["Humane AI Pin", "Wearable agent; limited uptake; exploring pivots."], ["Apple Glasses", "Rumored 2027 launch; expected on-device agent support."], ["Google Glass", "Legacy AR; new AI features in development."]], "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/meta-wants-you-t..."], ["Meta Ray-Ban Smart Glasses", "https://www.meta.com/smart-glasses/"]]}];
+        const WORD = {"term": "Agentic Loop", "pos": "noun \u00c2\u00b7 AI architecture", "def": "Repeating cycle where an AI observes the world, decides on actions, and executes them autonomously.", "why": "Foundation of next-generation AI systems that don't just respond but actively work on your behalf.", "tie": "Ties to Story #1 & #4: SMS agents and safety departures highlight how agentic systems are both increasingly powerful and increasingly controversial."};
         const voteCounts = {};
 
         function renderCards() {
@@ -738,11 +162,11 @@
                     <div class="card ${idx === 0 ? 'active' : ''}" onclick="selectStory(${idx})">
                         <div class="card-top">
                             <div class="card-num">${num}</div>
-                            <div class="card-cat">${story.cat}</div>
+                            <div class="card-cat" data-cat="${story.cat}">${story.cat.toUpperCase()}</div>
                         </div>
                         <div class="card-headline">${story.head}</div>
                         <div class="card-meta">
-                            <div>${story.deck}</div>
+                            <div>${story.deck.split(' ').slice(0, 20).join(' ')}${story.deck.split(' ').length > 20 ? '...' : ''}</div>
                         </div>
                     </div>
                 `;
@@ -758,39 +182,47 @@
                     <div class="story-header-left">THE DEEP DIVE</div>
                     <div class="story-header-right">STORY 0${idx+1}  /  ${story.cat}</div>
                 </div>
-
                 <div class="story-intro">
                     <div class="story-headline">${story.head}</div>
                     <div class="story-deck">${story.deck}</div>
-                    <div class="story-byline"><strong>By The Signal desk</strong> ·  5 min read  ·  Illustrative analysis</div>
+                    <div class="story-byline"><strong>By The Signal desk</strong> · ${story.links ? story.links.slice(0, 3).map(l => `<a href="${l[1]}" target="_blank" style="color: #254bc7; text-decoration: none;">${l[0]}</a>`).join(' · ') : 'Source'} · Illustrative analysis</div>
                 </div>
-
-                <div class="analysis-columns">
-                    ${story.scale ? `<div class="analysis-section">
-                        <div class="analysis-title">A different kind of scale</div>
-                        <div class="analysis-text">${story.scale}</div>
-                    </div>` : ''}
-                    ${story.why ? `<div class="analysis-section">
-                        <div class="analysis-title">Why it matters</div>
-                        <div class="analysis-text">${story.why}</div>
-                    </div>` : ''}
-                </div>
-
+                ${story.scale ? `<div style="margin-bottom: 16px;">
+                    ${story.scale.split('\\n\\n').map(section => {
+                        const parts = section.trim().split(': ');
+                        if (parts.length === 2) {
+                            return `<div style="margin-bottom: 10px; padding: 10px 12px; background: #f5f2e9; border-left: 3px solid #d1d1c5;">
+                                <div style="font-size: 12px; font-weight: 600; color: #254bc7; margin-bottom: 4px;">${parts[0]}:</div>
+                                <div style="font-size: 13px; line-height: 1.5; color: #21251f;">${parts[1]}</div>
+                            </div>`;
+                        }
+                        return `<div style="margin-bottom: 10px; padding: 10px 12px; background: #f5f2e9; border-left: 3px solid #d1d1c5;">
+                            <div style="font-size: 13px; line-height: 1.5; color: #21251f;">${section}</div>
+                        </div>`;
+                    }).join('')}
+                </div>` : ''}
+                ${story.why ? `<div style="margin-bottom: 12px;">
+                    <div style="font-size: 12px; font-weight: 600; color: #254bc7; text-transform: uppercase; margin-bottom: 8px;">Why It Matters</div>
+                    <div style="font-size: 13px; line-height: 1.6; color: #21251f;">${story.why}</div>
+                </div>` : ''}
                 ${story.signal ? `<div class="editorial-takeaway">
                     <div class="editorial-takeaway-label">THE SIGNAL</div>
                     <div class="editorial-takeaway-text">${story.signal}</div>
                 </div>` : ''}
-
+                ${story.vs ? `<div style="margin-bottom: 12px;">
+                    <div style="font-size: 12px; font-weight: 600; color: #254bc7; text-transform: uppercase; margin-bottom: 8px;">What Others Are Doing</div>
+                    ${story.vs.map(v => `<div style="margin-bottom: 6px; padding: 8px 10px; background: #faf8f1; border-left: 2px solid #d1d1c5;">
+                        <div style="font-weight: 600; color: #21251f; font-size: 12px; margin-bottom: 2px;">${v[0]}</div>
+                        <div style="font-size: 12px; color: #21251f; line-height: 1.4;">${v[1]}</div>
+                    </div>`).join('')}
+                </div>` : ''}
                 <div class="source-section">
                     <div class="source-details">
                         <div class="source-label">SOURCE CONTEXT</div>
                         <div class="source-text">${story.source || 'Source pending'}</div>
                     </div>
-                    <a href="#" class="read-more">Read More →</a>
                 </div>
-
                 <div class="feedback-rule"></div>
-
                 <div class="feedback-section">
                     <div class="feedback-prompt">
                         <div class="feedback-question">Was this deep dive useful?</div>
@@ -809,52 +241,19 @@
             container.innerHTML = `
                 <div class="word-header">
                     <div class="word-label">WORD OF THE DAY</div>
-                    <svg class="word-icon" viewBox="0 0 19 19" fill="none">
-                        <path d="M1 10H18M1 14H18M1 6H18" stroke="#254bc7" stroke-width="2" stroke-linecap="round"/>
-                    </svg>
                 </div>
-
                 <div>
                     <div class="word-term">${WORD.term}</div>
                     <div class="word-pos">${WORD.pos}</div>
                 </div>
-
                 <div class="word-section">
                     <div class="word-section-label">THE DEFINITION</div>
                     <div class="word-section-text">${WORD.def}</div>
                 </div>
-
-                <div class="distillation-diagram">
-                    <div class="knowledge-transfer">
-                        <div class="model-column">
-                            <svg class="model-icon" viewBox="0 0 56 56" fill="none">
-                                <circle cx="28" cy="28" r="26" stroke="#254bc7" stroke-width="2"/>
-                            </svg>
-                            <div class="model-label">TEACHER</div>
-                        </div>
-                        <div class="transfer-arrow">
-                            <svg width="54" height="20" viewBox="0 0 54 20" fill="none">
-                                <path d="M0 10H48M48 10L54 10M48 10L43 5M48 10L43 15" stroke="#254bc7" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                            </svg>
-                            <div class="transfer-label">knowledge</div>
-                        </div>
-                        <div class="model-column">
-                            <svg class="model-icon compact" viewBox="0 0 32 32" fill="none">
-                                <circle cx="16" cy="16" r="14" fill="#254bc7"/>
-                            </svg>
-                            <div class="model-label">STUDENT</div>
-                        </div>
-                    </div>
-                    <div class="diagram-caption">Smaller model, borrowed wisdom.</div>
-                </div>
-
-                <div class="dictionary-rule"></div>
-
                 ${WORD.why ? `<div class="word-section">
                     <div class="word-section-label">WHY IT MATTERS</div>
                     <div class="word-section-text">${WORD.why}</div>
                 </div>` : ''}
-
                 ${WORD.tie ? `<div class="word-section" style="padding-top: 8px;">
                     <div class="word-section-label">TIES TO TODAY'S STORIES</div>
                     <div class="word-highlight">${WORD.tie}</div>
@@ -886,7 +285,6 @@
                                 downvotes: (downvotes || []).length
                             };
 
-                            // Update display
                             const upEl = document.getElementById(`upvote-${storyId}`);
                             const downEl = document.getElementById(`downvote-${storyId}`);
                             if (upEl) upEl.textContent = voteCounts[storyId].upvotes;
@@ -931,7 +329,6 @@
                     const {data:stories,error:err1} = await sb.from('stories').select('id').eq('story_id', storyId).limit(1);
                     if (!err1 && stories?.length) {
                         await sb.from('votes').insert({story_id: stories[0].id, vote_type: type, user_id: sessionId});
-                        // Refresh vote counts
                         await fetchVoteCounts(storyId);
                     }
                 }

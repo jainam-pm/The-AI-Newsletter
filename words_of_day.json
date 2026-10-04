@@ -21,7 +21,7 @@
     "def": "Time delay between a request and a response; measured in milliseconds.",
     "why": "In AI agents, sub-50ms latency feels instant; 200ms+ feels like a lag. Critical for user experience.",
     "tie": "Story #2 (DGX Spark reduces API latency 10x) and Story #4 (SMS agents need sub-second response).",
-    "last_used": null
+    "last_used": "2026-10-04"
   },
   {
     "term": "Full Disk Access",
@@ -29,7 +29,7 @@
     "def": "Permission that allows an app to read and write to all files on a user's device, including system files.",
     "why": "Powerful but dangerous; used by productivity apps and screen recorders. Easy to abuse.",
     "tie": "Story #3: Apple tightens Full Disk Access rules after Meta Muse (screen recording) controversy.",
-    "last_used": null
+    "last_used": "2026-10-04"
   },
   {
     "term": "Open Weights",
@@ -37,7 +37,7 @@
     "def": "Releasing AI model parameters publicly so anyone can download, run, and fine-tune the model.",
     "why": "Democratizes AI but raises concerns about misuse, safety, and responsibility.",
     "tie": "Story #2 (NVIDIA DGX optimized for open-weights) and Story #1 (Meta's open approach contrasts with Anthropic).",
-    "last_used": null
+    "last_used": "2026-10-04"
   },
   {
     "term": "Wearable Agent",
@@ -45,7 +45,7 @@
     "def": "AI assistant integrated into a physical device worn on the body (glasses, earbuds, rings).",
     "why": "Always-on, hands-free access. Raises privacy concerns but enables seamless interaction.",
     "tie": "Story #5: Meta's Muse pivots to Ray-Ban glasses; Apple Glasses rumored for 2027.",
-    "last_used": null
+    "last_used": "2026-10-04"
   },
   {
     "term": "Alignment",
@@ -53,7 +53,7 @@
     "def": "Process of ensuring an AI system's goals and behaviors match human intent and values.",
     "why": "Core unsolved problem in AI safety. Misaligned systems can cause harm at scale.",
     "tie": "Story #1: OpenAI safety researcher departure signals alignment tensions at leading labs.",
-    "last_used": null
+    "last_used": "2026-10-04"
   },
   {
     "term": "Throughput",
@@ -61,6 +61,6 @@
     "def": "Amount of work (requests, tokens, inferences) a system can process per unit time.",
     "why": "More throughput = lower cost per request. Critical for enterprise AI deployment.",
     "tie": "Story #2 (DGX Spark throughput for on-prem) and Story #4 (SMS agents scaling to 2B users).",
-    "last_used": null
+    "last_used": "2026-10-04"
   }
 ]

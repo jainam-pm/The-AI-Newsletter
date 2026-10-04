@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Morning Prompt — Daily AI News</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        html, body { width: 100%; height: 100%; }
+        body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif; background: linear-gradient(135deg, #faf6eb 0%, #f5f0e8 100%); color: #1a1710; overflow-x: hidden; }
+
+        .page-wrapper { display: flex; flex-direction: column; min-height: 100vh; }
+
+        /* Header */
+        .header { padding: 40px 60px; background: rgba(255,255,255,0.5); backdrop-filter: blur(10px); border-bottom: 1px solid rgba(212,160,74,0.1); }
+        .header h1 { font-size: 42px; font-weight: 700; color: #1a1710; margin-bottom: 8px; }
+        .header .meta { font-size: 16px; color: #666; }
+
+        /* Main Content */
+        .main-content { display: grid; grid-template-columns: 1fr 380px; gap: 40px; padding: 40px 60px; flex: 1; }
+
+        /* News Cards Grid */
+        .news-section h2 { font-size: 24px; font-weight: 600; margin-bottom: 30px; color: #1a1710; }
+        .cards-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 20px; }
+
+        .news-card {
+            background: white;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            display: flex;
+            flex-direction: column;
+            border: 1px solid rgba(212,160,74,0.1);
+        }
+
+        .news-card:hover {
+            box-shadow: 0 12px 24px rgba(0,0,0,0.12);
+            transform: translateY(-4px);
+        }
+
+        .card-header {
+            padding: 24px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            background: #fef9f3;
+            border-bottom: 1px solid rgba(212,160,74,0.1);
+        }
+
+        .card-number {
+            font-size: 48px;
+            font-weight: 300;
+            color: #d4a04a;
+            line-height: 1;
+            margin-bottom: 12px;
+            opacity: 0.7;
+        }
+
+        .card-cat {
+            display: inline-block;
+            padding: 6px 14px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            margin-bottom: 12px;
+            width: fit-content;
+        }
+
+        .card-headline {
+            font-size: 18px;
+            font-weight: 700;
+            line-height: 1.3;
+            color: #1a1710;
+            margin-bottom: 10px;
+        }
+
+        .card-deck {
+            font-size: 14px;
+            line-height: 1.5;
+            color: #666;
+        }
+
+        .card-body {
+            padding: 20px 24px 24px;
+            display: none;
+            background: white;
+        }
+
+        .news-card.expanded .card-body { display: block; }
+
+        .story-rows { margin: 16px 0; }
+        .story-row { display: grid; grid-template-columns: 100px 1fr; gap: 12px; margin-bottom: 12px; font-size: 13px; }
+        .story-row strong { color: #1a1710; font-weight: 600; }
+        .story-row-value { color: #555; line-height: 1.4; }
+
+        .story-vs { margin: 16px 0; padding: 12px; background: #fef9f3; border-radius: 6px; }
+        .story-vs-header { font-size: 12px; font-weight: 700; color: #1a1710; margin-bottom: 8px; text-transform: uppercase; }
+        .story-vs-item { font-size: 12px; margin-bottom: 6px; }
+        .story-vs-item strong { color: #1a1710; }
+
+        .story-links { margin: 16px 0; padding: 12px; background: #fef9f3; border-radius: 6px; }
+        .story-links-header { font-size: 12px; font-weight: 700; color: #1a1710; margin-bottom: 8px; }
+        .story-link { margin-bottom: 6px; }
+        .story-link a { color: #2a6fa8; text-decoration: none; font-size: 12px; }
+        .story-link a:hover { text-decoration: underline; }
+
+        .card-votes {
+            display: flex;
+            gap: 8px;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid rgba(212,160,74,0.1);
+        }
+
+        .vote-btn {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #d4a04a;
+            background: transparent;
+            color: #1a1710;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            transition: all 0.2s;
+        }
+
+        .vote-btn:hover {
+            background: #d4a04a;
+            color: white;
+        }
+
+        .read-more {
+            color: #2a6fa8;
+            text-decoration: none;
+            font-size: 13px;
+            font-weight: 600;
+            display: inline-block;
+            margin: 12px 0;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .word-card {
+            background: white;
+            border-radius: 12px;
+            padding: 32px 28px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            border: 1px solid rgba(212,160,74,0.1);
+            height: fit-content;
+        }
+
+        .word-card-header {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #d4a04a;
+            margin-bottom: 20px;
+            letter-spacing: 1px;
+        }
+
+        .word-term {
+            font-size: 28px;
+            font-weight: 700;
+            color: #d4a04a;
+            margin-bottom: 8px;
+            line-height: 1.2;
+        }
+
+        .word-pos {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 20px;
+            font-style: italic;
+        }
+
+        .word-def {
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid rgba(212,160,74,0.1);
+        }
+
+        .word-why {
+            font-size: 13px;
+            line-height: 1.6;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .word-why strong { color: #1a1710; }
+
+        .word-tie {
+            font-size: 12px;
+            color: #999;
+            line-height: 1.5;
+            font-style: italic;
+        }
+
+        /* Responsive */
+        @media (max-width: 1200px) {
+            .main-content { grid-template-columns: 1fr; }
+            .cards-grid { grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); }
+        }
+
+        @media (max-width: 768px) {
+            .header { padding: 24px 20px; }
+            .header h1 { font-size: 28px; }
+            .main-content { padding: 20px; gap: 20px; }
+            .cards-grid { grid-template-columns: 1fr; }
+            .card-number { font-size: 32px; }
+            .card-headline { font-size: 16px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="page-wrapper">
+        <div class="header">
+            <h1>The Morning Prompt</h1>
+            <div class="meta">Daily AI news digest • October 4, 2026</div>
+        </div>
+
+        <div class="main-content">
+            <div class="news-section">
+                <h2>Today's Top Stories</h2>
+                <div class="cards-grid" id="news-cards"></div>
+            </div>
+
+            <div class="sidebar">
+                <div class="word-card">
+                    <div class="word-card-header">Word of the Day</div>
+                    <div id="word-display"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2" async></script>
+    <script>
+        const STORIES = [
+            {"id":"s1","cat":"privacy","n":"01","head":"OpenAI Safety Officer Resigns: 'Culture is Broken'","deck":"High-profile departure signals internal discord over alignment priorities.","rows":[["Who","A senior safety researcher at OpenAI"],["What","Resigned claiming safety culture deteriorated after recent leadership changes."],["When","Effective October 3, 2026."],["Where","OpenAI (San Francisco)"],["Why","Frustration with deprioritization of alignment research."],["How","Public resignation letter urging others to speak up."]],"vs":[["Anthropic","Maintains constitutional AI approach"],["DeepSeek","Rapidly scaling; minimal safety commitments"],["Meta","Open-weights; responsible AI initiatives"]],"links":[["OpenAI News","https://openai.com"]]},
+            {"id":"s2","cat":"models","n":"02","head":"NVIDIA DGX Spark: Local AI Inference Half the Cost","deck":"New compact GPU system brings enterprise inference to on-prem, cutting latency by 10x.","rows":[["Who","NVIDIA, CoreWeave"],["What","DGX Spark 64GB - 4-GPU system for open-weights LLMs"],["When","Shipping October 15, 2026"],["Where","On-premises deployment"],["Why","Avoid cloud API latency and per-token costs"],["How","Plug in, deploy via NVIDIA NIM runtime"]],"vs":[["Apple","M4 MacBooks run 7B models locally"],["AWS Trainium","Higher cost, more complex"],["Azure ML","Cloud-based, higher latency"]],"links":[["NVIDIA","https://nvidia.com"]]},
+            {"id":"s3","cat":"security","n":"03","head":"Apple Tightens macOS Full Disk Access After Meta Muse","deck":"New OS restrictions block surveillance-capable apps, raising privacy bar.","rows":[["What","macOS 15.1 restricts Full Disk Access"],["Why","Users reported Meta Muse recording without consent"],["When","Available now"],["Where","macOS Sonoma"]],"vs":[["Windows","Copilot Recall faces backlash"],["Android 15","Agents sandboxed by default"],["Meta","Pivoting to AR glasses"]],"links":[["Apple","https://apple.com"]]},
+            {"id":"s4","cat":"builders","n":"04","head":"AI Agents Now Live in Your Text Messages","deck":"Claude, ChatGPT, Gemini launch SMS integration reaching billions without apps.","rows":[["Who","Anthropic, OpenAI, Google, Meta"],["What","SMS-based agent access launched"],["When","Sept 28 - Oct 2, 2026"],["Where","Global SMS access"],["Why","SMS reaches 2B people without smartphones"],["How","Text a prompt, agents respond"]],"vs":[["Mistral","SMS in Latin America"],["Microsoft","Copilot SMS beta"],["Perplexity","SMS search"]],"links":[["Anthropic","https://anthropic.com"]]},
+            {"id":"s5","cat":"builders","n":"05","head":"Meta Pivots Muse From Mac to AR Glasses","deck":"After screen-recording backlash, Meta refocuses on Ray-Ban wearables.","rows":[["What","Muse discontinued on desktop; launching on Ray-Ban glasses"],["Why","Desktop Muse faced privacy backlash"],["When","October 5, 2026"],["Where","Ray-Ban smart glasses"]],"vs":[["Humane AI Pin","Limited uptake"],["Apple Glasses","2027 launch"],["Google Glass","Legacy AR"]],"links":[["Meta","https://meta.com"]]}
+        ];
+
+        const WORD = {"term":"Agentic Loop","pos":"noun · AI architecture","def":"Repeating cycle where AI observes, decides, and executes autonomously.","why":"Foundation of next-gen AI systems that work on your behalf.","tie":"Ties to Stories #1 & #4: SMS agents and safety highlight agentic power and controversy."};
+
+        const CATS = {privacy:{label:"Agents & Privacy",color:"#7a3ea0"},models:{label:"Models",color:"#2a6fa8"},security:{label:"Security",color:"#b33425"},builders:{label:"Builders & Funding",color:"#4db87a"}};
+
+        function renderNews() {
+            const container = document.getElementById('news-cards');
+            container.innerHTML = STORIES.map((story, idx) => {
+                const cat = CATS[story.cat] || {label:"News",color:"#999"};
+
+                let rows = '';
+                if (story.rows?.length) {
+                    rows = '<div class="story-rows">' + story.rows.map(r =>
+                        `<div class="story-row"><strong>${r[0]}</strong><div class="story-row-value">${r[1]}</div></div>`
+                    ).join('') + '</div>';
+                }
+
+                let vs = '';
+                if (story.vs?.length) {
+                    vs = '<div class="story-vs"><div class="story-vs-header">vs</div>' +
+                        story.vs.map(v => `<div class="story-vs-item"><strong>${v[0]}</strong> ${v[1]}</div>`).join('') +
+                        '</div>';
+                }
+
+                let links = '';
+                if (story.links?.length) {
+                    links = '<div class="story-links"><div class="story-links-header">Source</div>' +
+                        story.links.map(l => `<div class="story-link"><a href="${l[1]}" target="_blank">${l[0]} →</a></div>`).join('') +
+                        '</div>';
+                }
+
+                return `<div class="news-card" data-id="${story.id}" onclick="this.classList.toggle('expanded')">
+                    <div class="card-header">
+                        <div class="card-number">${story.n}</div>
+                        <div class="card-cat" style="background-color:${cat.color}">${cat.label}</div>
+                        <div class="card-headline">${story.head}</div>
+                        <div class="card-deck">${story.deck}</div>
+                    </div>
+                    <div class="card-body">
+                        <a href="${story.links?.[0]?.[1]||'#'}" target="_blank" class="read-more">Read full story →</a>
+                        ${rows}${vs}${links}
+                        <div class="card-votes">
+                            <button class="vote-btn" onclick="vote('${story.id}','up',event)">👍 Vote</button>
+                            <button class="vote-btn" onclick="vote('${story.id}','down',event)">👎 Skip</button>
+                        </div>
+                    </div>
+                </div>`;
+            }).join('');
+        }
+
+        function renderWord() {
+            const container = document.getElementById('word-display');
+            container.innerHTML = `
+                <div class="word-term">${WORD.term}</div>
+                <div class="word-pos">${WORD.pos}</div>
+                <div class="word-def">${WORD.def}</div>
+                <div class="word-why"><strong>Why:</strong> ${WORD.why}</div>
+                <div class="word-tie">💡 ${WORD.tie}</div>`;
+        }
+
+        async function vote(storyId, type, event) {
+            event.stopPropagation();
+            const btn = event.target;
+
+            btn.disabled = true;
+            btn.textContent = type==='up'?'✓ Voted':'✓ Noted';
+            btn.style.background = '#4db87a';
+            btn.style.color = 'white';
+
+            setTimeout(() => {
+                btn.disabled = false;
+                btn.style.background = '';
+                btn.style.color = '';
+                btn.textContent = type==='up'?'👍 Vote':'👎 Skip';
+            }, 800);
+
+            const sessionId = localStorage.getItem('session') || ('u-' + Date.now());
+            localStorage.setItem('session', sessionId);
+
+            try {
+                let sb = null;
+                for (let i = 0; i < 10; i++) {
+                    if (window.supabase) {
+                        sb = window.supabase.createClient('https://mzsipmeuthconogugwry.supabase.co', 'sb_publishable_AHLzBSVlyyQJSKIZFD2Nyg_R2WHJfMG');
+                        break;
+                    }
+                    await new Promise(r => setTimeout(r, 100));
+                }
+
+                if (!sb) throw new Error('Supabase not loaded');
+
+                const {data:stories,error:err1} = await sb.from('stories').select('id').eq('story_id', storyId).limit(1);
+                if (err1 || !stories?.length) throw new Error('Story not found');
+
+                const {error:err2} = await sb.from('votes').insert({story_id:stories[0].id,vote_type:type,user_id:sessionId});
+                if (err2) throw err2;
+
+                console.log(`Vote recorded: ${type} on ${storyId}`);
+            } catch(e) {
+                console.error('Vote failed:', e);
+            }
+        }
+
+        renderNews();
+        renderWord();
+    </script>
+</body>
+</html>

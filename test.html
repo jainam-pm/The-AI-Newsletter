@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Test</title>
+    <style>
+        body { font-family: Arial; padding: 20px; }
+        .story { border: 1px solid #ccc; margin: 10px 0; padding: 10px; }
+    </style>
+</head>
+<body>
+    <h1>The Morning Prompt Test</h1>
+    <div id="stories"></div>
+
+    <script>
+        const STORIES = [
+            { id: "s1", head: "Story 1", deck: "Deck 1" },
+            { id: "s2", head: "Story 2", deck: "Deck 2" }
+        ];
+
+        function renderStories() {
+            const container = document.getElementById('stories');
+            if (!container) {
+                console.error('Container not found!');
+                return;
+            }
+
+            STORIES.forEach(story => {
+                const html = `<div class="story">
+                    <h2>${story.head}</h2>
+                    <p>${story.deck}</p>
+                </div>`;
+                container.innerHTML += html;
+            });
+        }
+
+        console.log('Page loaded, calling renderStories...');
+        renderStories();
+        console.log('renderStories complete');
+    </script>
+</body>
+</html>

@@ -346,7 +346,13 @@
         // Initialize Supabase (using your public credentials)
         const SUPABASE_URL = 'https://mzsipmeuthconogugwry.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_AHLzBSVlyyQJSKIZFD2Nyg_R2WHJfMG';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabase = null;
+        function getSupabase() {
+            if (!supabase && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+            return supabase;
+        }
 
         const CATS = {
             privacy:  { label: "Agents & Privacy",    color: "#7a3ea0" },
@@ -467,23 +473,26 @@
                 button.textContent = 'Saving...';
 
                 // Get story ID from database
-                const { data: stories, error: searchError } = await supabase
+                const sb = getSupabase();
+                if (!sb) throw new Error('Supabase not loaded');
+
+                const { data: stories, error: searchError } = await sb
                     .from('stories')
                     .select('id')
-                    .eq('headline', story.head)
+                    .eq('story_id', storyId)
                     .limit(1);
 
                 if (searchError || !stories || stories.length === 0) {
                     throw new Error('Story not found in database');
                 }
 
-                const storyId = stories[0].id;
+                const dbStoryId = stories[0].id;
 
                 // Send vote to Supabase
-                const { data, error } = await supabase
+                const { data, error } = await sb
                     .from('votes')
                     .insert({
-                        story_id: storyId,
+                        story_id: dbStoryId,
                         vote_type: type,
                         user_id: sessionId
                     });
@@ -524,10 +533,9 @@
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderStories();
-            renderWord();
-        });
+        // Call directly - inline script runs after DOM is ready
+        renderStories();
+        renderWord();
     </script>
 </body>
 </html>
