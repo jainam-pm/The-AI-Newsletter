@@ -1,0 +1,66 @@
+[
+  {
+    "term": "Agentic Loop",
+    "pos": "noun \u00c2\u00b7 AI architecture",
+    "def": "Repeating cycle where an AI observes the world, decides on actions, and executes them autonomously.",
+    "why": "Foundation of next-generation AI systems that don't just respond but actively work on your behalf.",
+    "tie": "Ties to Story #1 & #4: SMS agents and safety departures highlight how agentic systems are both increasingly powerful and increasingly controversial.",
+    "last_used": "2026-10-04"
+  },
+  {
+    "term": "Constitutional AI",
+    "pos": "noun \u00c2\u00b7 AI alignment approach",
+    "def": "Training AI systems using a constitution (set of principles) rather than human feedback alone.",
+    "why": "Offers scalable alignment: teach principles once, apply to infinite behaviors.",
+    "tie": "Directly referenced in Story #1 (OpenAI departures) and Story #3 (Apple's tighter security).",
+    "last_used": "2026-10-04"
+  },
+  {
+    "term": "Latency",
+    "pos": "noun \u00c2\u00b7 systems performance",
+    "def": "Time delay between a request and a response; measured in milliseconds.",
+    "why": "In AI agents, sub-50ms latency feels instant; 200ms+ feels like a lag. Critical for user experience.",
+    "tie": "Story #2 (DGX Spark reduces API latency 10x) and Story #4 (SMS agents need sub-second response).",
+    "last_used": null
+  },
+  {
+    "term": "Full Disk Access",
+    "pos": "noun \u00c2\u00b7 OS security permission",
+    "def": "Permission that allows an app to read and write to all files on a user's device, including system files.",
+    "why": "Powerful but dangerous; used by productivity apps and screen recorders. Easy to abuse.",
+    "tie": "Story #3: Apple tightens Full Disk Access rules after Meta Muse (screen recording) controversy.",
+    "last_used": null
+  },
+  {
+    "term": "Open Weights",
+    "pos": "noun \u00c2\u00b7 AI distribution model",
+    "def": "Releasing AI model parameters publicly so anyone can download, run, and fine-tune the model.",
+    "why": "Democratizes AI but raises concerns about misuse, safety, and responsibility.",
+    "tie": "Story #2 (NVIDIA DGX optimized for open-weights) and Story #1 (Meta's open approach contrasts with Anthropic).",
+    "last_used": null
+  },
+  {
+    "term": "Wearable Agent",
+    "pos": "noun \u00c2\u00b7 AI form factor",
+    "def": "AI assistant integrated into a physical device worn on the body (glasses, earbuds, rings).",
+    "why": "Always-on, hands-free access. Raises privacy concerns but enables seamless interaction.",
+    "tie": "Story #5: Meta's Muse pivots to Ray-Ban glasses; Apple Glasses rumored for 2027.",
+    "last_used": null
+  },
+  {
+    "term": "Alignment",
+    "pos": "noun \u00c2\u00b7 AI safety",
+    "def": "Process of ensuring an AI system's goals and behaviors match human intent and values.",
+    "why": "Core unsolved problem in AI safety. Misaligned systems can cause harm at scale.",
+    "tie": "Story #1: OpenAI safety researcher departure signals alignment tensions at leading labs.",
+    "last_used": null
+  },
+  {
+    "term": "Throughput",
+    "pos": "noun \u00c2\u00b7 systems performance",
+    "def": "Amount of work (requests, tokens, inferences) a system can process per unit time.",
+    "why": "More throughput = lower cost per request. Critical for enterprise AI deployment.",
+    "tie": "Story #2 (DGX Spark throughput for on-prem) and Story #4 (SMS agents scaling to 2B users).",
+    "last_used": null
+  }
+]

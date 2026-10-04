@@ -6,7 +6,7 @@ Picks 5 stories, fetches articles, writes summaries, and renders HTML
 
 import json
 import subprocess
-from datetime import datetime
+from datetime import datetime, date
 import os
 
 # Get candidates from fetch.py
@@ -149,19 +149,76 @@ stories = [
     }
 ]
 
-word = {
-    "term": "Agentic Loop",
-    "pos": "noun · AI architecture",
-    "def": "Repeating cycle where an AI observes the world, decides on actions, and executes them autonomously.",
-    "why": "Foundation of next-generation AI systems that don't just respond but actively work on your behalf.",
-    "tie": "Ties to Story #1 & #4: SMS agents and safety departures highlight how agentic systems are both increasingly powerful and increasingly controversial."
+print(f"[EDITOR] Selected {len(stories)} stories for today's edition.")
+
+# Load and rotate Word of the Day with deduplication
+print("[EDITOR] Loading Word of the Day list...")
+try:
+    with open("words_of_day.json", "r") as f:
+        words_list = json.load(f)
+
+    today = str(date.today())
+    # Find a word that wasn't used today
+    word = None
+    for w in words_list:
+        if w.get("last_used") != today:
+            word = w
+            w["last_used"] = today
+            break
+
+    # If all words used today, pick the oldest (shouldn't happen daily)
+    if not word:
+        word = min(words_list, key=lambda w: w.get("last_used") or "2000-01-01")
+        word["last_used"] = today
+
+    # Update the file
+    with open("words_of_day.json", "w") as f:
+        json.dump(words_list, f, indent=2)
+
+    print(f"[EDITOR] Word of the Day: {word['term']} (rotated, not repeating)")
+except Exception as e:
+    print(f"[WARN] Could not load words list: {e}. Using default.")
+    word = {
+        "term": "Agentic Loop",
+        "pos": "noun · AI architecture",
+        "def": "Repeating cycle where an AI observes the world, decides on actions, and executes them autonomously.",
+        "why": "Foundation of next-generation AI systems that don't just respond but actively work on your behalf.",
+        "tie": "Ties to Story #1 & #4: SMS agents and safety departures highlight how agentic systems are both increasingly powerful and increasingly controversial."
+    }
+
+# Load newsletter template
+print("[EDITOR] Loading newsletter template...")
+try:
+    with open("output/newsletter-final.html", "r", encoding="utf-8") as f:
+        html = f.read()
+except Exception as e:
+    print(f"[ERROR] Could not load newsletter template: {e}")
+    exit(1)
+
+# Prepare story data without fake vote counts
+stories_for_template = []
+for story in stories:
+    s = story.copy()
+    # Remove any vote counts - they'll be fetched from Supabase
+    s.pop('upvotes', None)
+    s.pop('downvotes', None)
+    stories_for_template.append(s)
+
+# Prepare word data (remove last_used - not needed in template)
+word_for_template = {
+    "term": word["term"],
+    "pos": word["pos"],
+    "def": word["def"],
+    "why": word["why"],
+    "tie": word["tie"]
 }
 
-print(f"[EDITOR] Selected {len(stories)} stories for today's edition.")
-print(f"[EDITOR] Word of the Day: {word['term']}")
+# Inject data into template
+html = html.replace("%STORIES%", json.dumps(stories_for_template))
+html = html.replace("%WORD%", json.dumps(word_for_template))
 
-# Build HTML
-html = """<!DOCTYPE html>
+# Old HTML template code (kept for reference, not used):
+html_old = """<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
@@ -509,7 +566,13 @@ html = """<!DOCTYPE html>
         // Initialize Supabase (using your public credentials)
         const SUPABASE_URL = 'https://mzsipmeuthconogugwry.supabase.co';
         const SUPABASE_KEY = 'sb_publishable_AHLzBSVlyyQJSKIZFD2Nyg_R2WHJfMG';
-        const supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+        let supabase = null;
+        function getSupabase() {
+            if (!supabase && window.supabase) {
+                supabase = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+            }
+            return supabase;
+        }
 
         const CATS = {
             privacy:  { label: "Agents & Privacy",    color: "#7a3ea0" },
@@ -630,23 +693,26 @@ html = """<!DOCTYPE html>
                 button.textContent = 'Saving...';
 
                 // Get story ID from database
-                const { data: stories, error: searchError } = await supabase
+                const sb = getSupabase();
+                if (!sb) throw new Error('Supabase not loaded');
+
+                const { data: stories, error: searchError } = await sb
                     .from('stories')
                     .select('id')
-                    .eq('headline', story.head)
+                    .eq('story_id', storyId)
                     .limit(1);
 
                 if (searchError || !stories || stories.length === 0) {
                     throw new Error('Story not found in database');
                 }
 
-                const storyId = stories[0].id;
+                const dbStoryId = stories[0].id;
 
                 // Send vote to Supabase
-                const { data, error } = await supabase
+                const { data, error } = await sb
                     .from('votes')
                     .insert({
-                        story_id: storyId,
+                        story_id: dbStoryId,
                         vote_type: type,
                         user_id: sessionId
                     });
@@ -687,21 +753,16 @@ html = """<!DOCTYPE html>
             }
         }
 
-        window.addEventListener('DOMContentLoaded', () => {
-            renderStories();
-            renderWord();
-        });
+        // Call directly - inline script runs after DOM is ready
+        renderStories();
+        renderWord();
     </script>
 </body>
 </html>
 """
 
-# Inject data into HTML
-html = html.replace("%STORIES%", json.dumps(stories))
-html = html.replace("%WORD%", json.dumps(word))
-
-# Write to output
-output_file = f"output/{datetime.now().strftime('%Y-%m-%d')}.html"
+# Write to output (use newsletter-final.html as the destination)
+output_file = "output/newsletter-final.html"
 with open(output_file, "w", encoding="utf-8") as f:
     f.write(html)
 
@@ -748,3 +809,26 @@ try:
 except Exception as e:
     print(f"[SUPABASE] Error saving to database: {e}")
     print("[WARN] HTML edition still created successfully")
+
+# Update published.json to avoid re-publishing same stories
+try:
+    published_file = "published.json"
+    published = []
+    if os.path.exists(published_file):
+        with open(published_file, "r") as f:
+            published = json.load(f)
+
+    # Add today's stories to published list
+    for story in stories:
+        published.append({
+            "url": story.get("links", [[None, ""]])[0][1] if story.get("links") else "",
+            "headline": story["head"],
+            "date": str(date.today())
+        })
+
+    with open(published_file, "w") as f:
+        json.dump(published, f, indent=2)
+
+    print(f"[EDITOR] Updated published.json with {len(stories)} stories")
+except Exception as e:
+    print(f"[WARN] Failed to update published.json: {e}")
