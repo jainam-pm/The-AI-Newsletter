@@ -40,15 +40,13 @@ jobs:
           echo "Newsletter generated at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
 
       - name: Commit and push changes
-        run: |
-          git config --local user.email "github-actions[bot]@users.noreply.github.com"
-          git config --local user.name "github-actions[bot]"
-          git add output/newsletter-final.html published.json words_of_day.json .feed_cache.json
-          git commit -m "Daily newsletter generated at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
-          git remote set-url origin https://jainam-pm:${{ secrets.GITHUB_TOKEN }}@github.com/jainam-pm/The-AI-Newsletter.git
-          git push origin main
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_PAT }}
+        uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "Daily newsletter generated at ${{ job.created_at }}"
+          file_pattern: output/newsletter-final.html published.json words_of_day.json .feed_cache.json
+          commit_user_name: "github-actions[bot]"
+          commit_user_email: "github-actions[bot]@users.noreply.github.com"
+          push_options: "--force"
 
       - name: Notify on success
         if: success()
