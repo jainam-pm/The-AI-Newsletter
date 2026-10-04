@@ -25,6 +25,8 @@ print(candidates_text)
 # (In the real skill, Claude would fetch articles and write these)
 print("\n[EDITOR] Picking top 5 stories...")
 
+# TODO: Parse candidates_text and dynamically select from fetch.py results
+# For now, keeping editorial template structure
 stories = [
     {
         "id": "s1",
@@ -178,18 +180,30 @@ try:
         words_list = json.load(f)
 
     today = str(date.today())
-    # Find a word that wasn't used today
-    word = None
+    # Check if today's word already selected (prevent multiple runs per day from overwriting)
+    todays_word = None
     for w in words_list:
-        if w.get("last_used") != today:
-            word = w
-            w["last_used"] = today
+        if w.get("last_used") == today:
+            todays_word = w
             break
 
-    # If all words used today, pick the oldest (shouldn't happen daily)
-    if not word:
-        word = min(words_list, key=lambda w: w.get("last_used") or "2000-01-01")
-        word["last_used"] = today
+    # If today's word already selected, use it. Otherwise pick a new one
+    if todays_word:
+        word = todays_word
+    else:
+        # Find first word that wasn't used today
+        word = None
+        for w in words_list:
+            last_used = w.get("last_used", "2000-01-01")
+            if last_used != today:
+                word = w
+                w["last_used"] = today
+                break
+
+        # If all words used today (shouldn't happen - 8 words per day), pick oldest
+        if not word:
+            word = min(words_list, key=lambda w: w.get("last_used", "2000-01-01"))
+            word["last_used"] = today
 
     # Update the file
     with open("words_of_day.json", "w") as f:
@@ -838,17 +852,21 @@ try:
         with open(published_file, "r") as f:
             published = json.load(f)
 
-    # Add today's stories to published list
+    today = str(date.today())
+    # Remove any existing entries for today (avoid duplicates)
+    published = [p for p in published if p.get("date") != today]
+
+    # Add today's stories (one entry per story)
     for story in stories:
         published.append({
-            "url": story.get("links", [[None, ""]])[0][1] if story.get("links") else "",
+            "url": story.get("source", ""),
             "headline": story["head"],
-            "date": str(date.today())
+            "date": today
         })
 
     with open(published_file, "w") as f:
         json.dump(published, f, indent=2)
 
-    print(f"[EDITOR] Updated published.json with {len(stories)} stories")
+    print(f"[EDITOR] Updated published.json with {len(stories)} stories for {today}")
 except Exception as e:
     print(f"[WARN] Failed to update published.json: {e}")

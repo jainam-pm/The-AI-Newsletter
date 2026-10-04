@@ -1,226 +1,26 @@
 [
   {
-    "url": "https://openai.com/news/",
+    "url": "OpenAI \u00b7 TechCrunch",
     "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
     "date": "2026-10-04"
   },
   {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
+    "url": "NVIDIA \u00b7 Enterprise Weekly",
     "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
     "date": "2026-10-04"
   },
   {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
+    "url": "Apple \u00b7 TechCrunch",
     "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
     "date": "2026-10-04"
   },
   {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
+    "url": "TechCrunch \u00b7 App Intelligence",
     "headline": "AI Agents Now Live in Your Text Messages",
     "date": "2026-10-04"
   },
   {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
-    "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://openai.com/news/",
-    "headline": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6...",
-    "headline": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/apple-says-its-t...",
-    "headline": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/03/all-the-ai-agent...",
-    "headline": "AI Agents Now Live in Your Text Messages",
-    "date": "2026-10-04"
-  },
-  {
-    "url": "https://techcrunch.com/2026/10/02/meta-wants-you-t...",
+    "url": "Meta \u00b7 TechCrunch",
     "headline": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
     "date": "2026-10-04"
   }
