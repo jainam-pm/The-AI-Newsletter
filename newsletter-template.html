@@ -35,7 +35,11 @@
         .card-top { display: flex; justify-content: space-between; align-items: flex-start; color: #6e7168; margin-bottom: 8px; }
         .card.active .card-top { color: #254bc7; }
         .card-num { font-family: 'DM Serif Display', serif; font-size: 8px; font-weight: 400; color: inherit; }
-        .card-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; color: #21251f; }
+        .card-cat { font-size: 10px; font-weight: 600; text-transform: uppercase; color: white; padding: 4px 8px; border-radius: 3px; display: inline-block; }
+        .card-cat[data-cat="privacy"] { background: #7a3ea0; }
+        .card-cat[data-cat="models"] { background: #2a6fa8; }
+        .card-cat[data-cat="security"] { background: #b33425; }
+        .card-cat[data-cat="builders"] { background: #4db87a; }
         .card-headline { font-family: 'DM Serif Display', serif; font-size: 23px; font-weight: 400; line-height: 1.16; color: #21251f; margin-bottom: 8px; flex: 1; }
         .card-meta { display: flex; flex-direction: column; gap: 8px; font-size: 10px; color: #6e7168; }
         .main-content { flex: 1; padding: 20px 64px; display: grid; grid-template-columns: 1fr 388px; gap: 30px; overflow-y: auto; background: white; }
@@ -157,11 +161,11 @@
                     <div class="card ${idx === 0 ? 'active' : ''}" onclick="selectStory(${idx})">
                         <div class="card-top">
                             <div class="card-num">${num}</div>
-                            <div class="card-cat">${story.cat}</div>
+                            <div class="card-cat" data-cat="${story.cat}">${story.cat.toUpperCase()}</div>
                         </div>
                         <div class="card-headline">${story.head}</div>
                         <div class="card-meta">
-                            <div>${story.deck}</div>
+                            <div>${story.deck.split(' ').slice(0, 20).join(' ')}${story.deck.split(' ').length > 20 ? '...' : ''}</div>
                         </div>
                     </div>
                 `;
@@ -180,7 +184,7 @@
                 <div class="story-intro">
                     <div class="story-headline">${story.head}</div>
                     <div class="story-deck">${story.deck}</div>
-                    <div class="story-byline"><strong>By The Signal desk</strong> ·  5 min read  ·  Illustrative analysis</div>
+                    <div class="story-byline"><strong>By The Signal desk</strong> · ${story.links ? story.links.slice(0, 3).map(l => `<a href="${l[1]}" target="_blank" style="color: #254bc7; text-decoration: none;">${l[0]}</a>`).join(' · ') : 'Source'} · Illustrative analysis</div>
                 </div>
                 <div class="analysis-columns">
                     ${story.scale ? `<div class="analysis-section">
@@ -195,6 +199,13 @@
                 ${story.signal ? `<div class="editorial-takeaway">
                     <div class="editorial-takeaway-label">THE SIGNAL</div>
                     <div class="editorial-takeaway-text">${story.signal}</div>
+                </div>` : ''}
+                ${story.vs ? `<div style="margin-bottom: 12px;">
+                    <div style="font-size: 13px; font-weight: 600; color: #21251f; margin-bottom: 10px;">WHAT OTHERS ARE DOING</div>
+                    ${story.vs.map(v => `<div style="margin-bottom: 8px; padding: 10px; background: #faf8f1; border-left: 3px solid #d1d1c5;">
+                        <div style="font-weight: 600; color: #254bc7; font-size: 12px;">${v[0]}</div>
+                        <div style="font-size: 13px; color: #21251f; line-height: 1.5;">${v[1]}</div>
+                    </div>`).join('')}
                 </div>` : ''}
                 <div class="source-section">
                     <div class="source-details">
