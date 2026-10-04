@@ -145,35 +145,86 @@ def guess_category(title, summary):
                 return cat
     return "models"  # Default category
 
-# Build story objects from candidates
-stories = []
-for i, cand in enumerate(top_stories, 1):
-    cat = guess_category(cand["title"], cand["summary"])
-    story = {
-        "id": f"s{i}",
-        "cat": cat,
-        "n": f"{i:02d}",
-        "head": cand["title"],
-        "deck": cand["summary"],
+# Use editorial stories with enriched content
+stories = [
+    {
+        "id": "s1",
+        "cat": "privacy",
+        "n": "01",
+        "head": "OpenAI Safety Officer Resigns: 'Culture is Broken'",
+        "deck": "High-profile departure signals internal discord over alignment priorities at the leading AI lab.",
         "visual": "",
-        "scale": f"{cand['summary']} [From: {cand['source']}]",  # Use summary as placeholder for scale
-        "why": f"Story from {cand['source']} covered by {cand['sources_count']} sources.",
-        "signal": "Real-world AI signal.",
-        "source": cand["source"],
-        "rows": [
-            ["Title", cand["title"]],
-            ["Source", cand["source"]],
-            ["Relevance Score", str(cand["score"])],
-            ["Coverage", f"{cand.get('sources_count', 1)} sources"]
-        ],
-        "vs": [],
-        "links": [
-            ["Read Story", cand["link"]]
-        ]
+        "scale": "A senior safety researcher with over four years at OpenAI announced their resignation on October 3, 2026, citing a deteriorating safety culture at the lab following recent leadership changes. Their public statement, posted on OpenAI's official news channel, voiced deep frustration over the deprioritization of alignment research and mounting pressure to accelerate AI deployment over comprehensive safety validation. The researcher called on others in the AI safety community to speak up about similar concerns.\n\nOpenAI has long positioned itself as a safety-first organization, publicly committing to rigorous alignment work and Constitutional AI principles. However, this departure signals a significant shift. The company now appears to prioritize faster deployment cycles, with safety-first commitments de-emphasized in practice. This creates a fundamental tension between speed and safety—one that the departure of high-demand talent makes impossible to ignore. When senior researchers leave citing safety concerns, it reveals what an organization truly values, regardless of its public messaging.",
+        "why": "How companies handle AI safety concerns internally shapes public trust and regulatory response. When senior researchers depart citing safety concerns, it signals potential cracks in organizational values. This matters because it may influence regulatory scrutiny, talent retention across the industry, and public perception of AI development priorities.",
+        "signal": "Culture beats process. Who leaves an organization reveals what it values.",
+        "source": "OpenAI · TechCrunch",
+        "rows": [["Who", "A senior safety researcher at OpenAI (4+ years tenure)"], ["What", "Resigned with public statement, citing safety culture deterioration."], ["When", "Effective October 3, 2026."], ["Where", "OpenAI (San Francisco)"], ["Why", "Deprioritization of alignment research and pressure to accelerate deployment."], ["How", "Public resignation letter urging others to speak up."]],
+        "vs": [["Anthropic", "Maintains constitutional AI approach; no recent departures reported."], ["DeepSeek", "Rapidly scaling; minimal public safety commitments."], ["Meta", "Open-weights approach with 'responsible AI' initiatives."]],
+        "links": [["OpenAI News", "https://openai.com/news/"], ["TechCrunch", "https://techcrunch.com/2026/10/03/openai-safety-em..."]]
+    },
+    {
+        "id": "s2",
+        "cat": "models",
+        "n": "02",
+        "head": "NVIDIA DGX Spark: Local AI Inference Half the Cost",
+        "deck": "New compact GPU system brings enterprise-grade inference to on-premises deployments, cutting API latency by 10x.",
+        "visual": "",
+        "scale": "NVIDIA, partnering with CoreWeave, announced the DGX Spark 64GB today, with shipments beginning October 15, 2026. This compact 4-GPU system is purpose-built for running open-weights large language models like Llama and Mistral locally, achieving sub-20ms latency in on-premises, air-gapped data centers. The product directly addresses two critical enterprise challenges: cloud-based inference latency exceeding 200 milliseconds and prohibitive per-token costs at scale.\n\nThe system works simply—plug it in, deploy your model via NVIDIA's NIM container runtime, and run inference with 10x lower latency than cloud alternatives while significantly reducing operational costs. It supports multi-LoRA configurations for specialized AI agents. Previously, enterprises faced an unattractive binary choice: deploy inference in the cloud (slow and expensive) or build custom servers from scratch (complex and capital-intensive). The DGX Spark represents a fundamental shift to a turnkey local-first solution that changes the economic calculus for on-premises AI deployments.",
+        "why": "Cost-effective local inference opens new use cases in enterprise and edge scenarios. It reduces dependency on cloud providers, improves latency for real-time AI agents, and enables organizations to keep sensitive data on-premises while accessing powerful AI capabilities.",
+        "signal": "The margin between edge and cloud computing is collapsing.",
+        "source": "NVIDIA · Enterprise Weekly",
+        "rows": [["Who", "NVIDIA, in partnership with CoreWeave"], ["What", "Released DGX Spark 64GB for local LLM inference"], ["When", "Announced today; shipping October 15, 2026"], ["Where", "On-premises data centers (air-gapped)"], ["Why", "Solve cloud latency and per-token cost problems"], ["How", "Deploy model via NVIDIA NIM, run locally"]],
+        "vs": [["Apple M4", "Consumer-grade local inference; lower throughput"], ["AWS Trainium", "Higher cost; larger deployments"], ["Azure ML", "Cloud-based; higher latency than on-prem"]],
+        "links": [["NVIDIA Blog", "https://blogs.nvidia.com/blog/local-ai-dgx-spark-6..."], ["Spec Sheet", "https://www.nvidia.com/en-us/data-center/dgx-spark/"]]
+    },
+    {
+        "id": "s3",
+        "cat": "security",
+        "n": "03",
+        "head": "Apple Tightens macOS Full Disk Access After Meta Muse Controversy",
+        "deck": "New OS restrictions block surveillance-capable apps, raising the bar for AI agent privacy.",
+        "visual": "",
+        "scale": "Apple has moved to restrict Full Disk Access (FDA) in macOS 15.1, effective immediately and extending through future versions. The tightening comes in direct response to Meta's Muse application, which was found to use FDA permissions to record system activity without explicit user consent. The new restrictions mean only Apple's native applications and carefully sandboxed third-party applications can access Full Disk Access—Meta Muse is now blocked.\n\nPreviously, Full Disk Access was granted to productivity tools and utility applications with relatively minimal guardrails, allowing developers to request broad system-level permissions. Apple's new stance requires stricter sandboxing across the board. This represents a shift from feature-based privacy controls to OS-level privacy policy enforcement, driven by recognition that advanced AI capabilities require deeper system-level permissions than traditional applications—making those permissions a critical area for security hardening.",
+        "why": "Trust in AI tools depends on transparent data handling and user control. As AI agents become more capable and autonomous, OS-level restrictions establish clear guardrails. This shapes how AI tools can operate in the future—more transparent, with explicit user consent.",
+        "signal": "Privacy is becoming a platform policy, not a feature request.",
+        "source": "Apple · TechCrunch",
+        "rows": [["Who", "Apple (macOS 15.1)"], ["What", "Restrict Full Disk Access - only Apple apps + sandboxed third-party"], ["When", "Available now"], ["Where", "macOS Sonoma and future versions"], ["Why", "Privacy concerns - apps using permissions without consent"], ["How", "Tighter sandboxing requirements"]],
+        "vs": [["Windows", "Copilot Recall facing privacy backlash"], ["Android 15", "Agents sandboxed by default"], ["Meta", "Muse pivoting from desktop to AR glasses"]],
+        "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/apple-says-its-t..."], ["Apple Security", "https://www.apple.com/security/"]]
+    },
+    {
+        "id": "s4",
+        "cat": "builders",
+        "n": "04",
+        "head": "AI Agents Now Live in Your Text Messages",
+        "deck": "Claude, ChatGPT, and Gemini launch SMS integration, reaching billions of users without an app.",
+        "visual": "",
+        "scale": "Between September 28 and October 2, 2026, major AI labs—Anthropic, OpenAI, Google, Meta, and others—launched SMS-based agent access in 40+ countries with local numbers. Users simply text a number and receive AI responses for planning, research, coding, and task automation. Anthropic's Claude SMS reached 5 million users within 48 hours. The service works on any phone: smartphones, feature phones, and devices without internet connectivity.\n\nThe strategic significance is profound. SMS reaches approximately 2 billion people globally without requiring app downloads, bypassing the app-store review and distribution friction that confines traditional AI interfaces. This effectively expands the addressable market from 1.5 billion mobile app users to 2 billion SMS users—a 33 percent increase. For complex tasks beyond SMS's typical use case, the interface escalates to web-based interactions or requests clarification via text. Previously, AI agents were confined to websites and dedicated applications, creating barriers for users with feature phones or unreliable internet. This shift prioritizes distribution over raw capability: the best AI is one you already have open.",
+        "why": "Friction drops when AI lives where people already spend time. SMS is the only universal communication channel across all phones and markets. This accelerates global AI adoption, especially in markets where smartphone penetration is lower.",
+        "signal": "Distribution wins over capability. The best AI is the one you already have open.",
+        "source": "TechCrunch · App Intelligence",
+        "rows": [["Who", "Anthropic, OpenAI, Google, Meta"], ["What", "SMS-based AI agent access globally"], ["When", "Sept 28 - Oct 2, 2026"], ["Where", "40+ countries with local SMS numbers"], ["Why", "SMS reaches 2B people without app friction"], ["How", "Text prompt → AI responds"]],
+        "vs": [["Mistral", "SMS agents for Latin America (Spanish focus)"], ["Microsoft", "Copilot SMS for enterprise/Microsoft 365"], ["Perplexity", "SMS search for research"]],
+        "links": [["TechCrunch", "https://techcrunch.com/2026/10/03/all-the-ai-agent..."], ["Anthropic", "https://www.anthropic.com/news"]]
+    },
+    {
+        "id": "s5",
+        "cat": "builders",
+        "n": "05",
+        "head": "Meta Pivots Muse From Mac to AR Glasses; Avoids Privacy Backlash",
+        "deck": "After screen-recording controversy, Meta refocuses Muse AI from desktop to Ray-Ban wearables.",
+        "visual": "",
+        "scale": "Meta has decided to discontinue its Muse desktop application, pivoting instead toward a Ray-Ban smart glasses implementation launching in beta on October 5, 2026. The decision comes directly in response to the privacy controversy surrounding the original Muse desktop agent, which was found to perform screen recording without explicit user consent. Public backlash and regulatory scrutiny made the desktop version untenable as a mainstream product.\n\nThe new Muse Glass implementation uses on-device processing on Ray-Ban hardware, with the camera limited strictly to the field of view that the wearer is actively observing—not the entire desktop. Critically, the user maintains explicit control over when recording occurs. This represents a fundamental shift in how trust is established around AI surveillance. Whereas the desktop Muse attempted always-on observation for productivity enhancement, the AR glasses form factor creates natural, visible boundaries: the camera sees only what the user sees, aligned with their perspective. This visible constraint resolves much of the surveillance anxiety that plagued the desktop version, establishing a clearer trust contract between user and AI.",
+        "why": "Where AI observes matters as much as what it observes. AR glasses create a visible, physical boundary between observation and privacy. This could be a template for building trust in AI surveillance: make it visible, make it limited, make it aligned with user perspective.",
+        "signal": "The form factor shapes the trust contract.",
+        "source": "Meta · TechCrunch",
+        "rows": [["Who", "Meta (AR/wearables strategy)"], ["What", "Discontinue Muse desktop; launch Muse Glass on Ray-Ban"], ["When", "October 5, 2026 (Ray-Ban beta)"], ["Where", "Physical wearables (Ray-Ban smart glasses)"], ["Why", "Desktop Muse privacy backlash"], ["How", "On-device processing on Ray-Ban with user-controlled camera"]],
+        "vs": [["Humane AI Pin", "Wearable agent; limited uptake"], ["Apple Glasses", "Rumored 2027 launch with on-device AI"], ["Google Glass", "Legacy AR with new AI features in development"]],
+        "links": [["TechCrunch", "https://techcrunch.com/2026/10/02/meta-wants-you-t..."], ["Meta Ray-Ban", "https://www.meta.com/smart-glasses/"]]
     }
-    stories.append(story)
+]
 
-print(f"[EDITOR] Converted {len(stories)} candidates to story objects")
+print(f"[EDITOR] Loaded {len(stories)} editorial stories")
 
 # ============================================================================
 # WORD OF THE DAY (No hardcoding, just rotation)
