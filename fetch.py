@@ -173,7 +173,7 @@ def main():
         print("[INFO] Using cached candidates (fresh within 5 min)", file=sys.stderr)
         print("\nCANDIDATES (top 25):\n")
         for i, c in enumerate(cached_candidates, 1):
-            print(f"{i}. {c['title']} | {c['source']} | {c['url']} | Covered by {c.get('coverage', 1)} sources | CACHED")
+            print(f"{i}. {c['title']} | {c['source']} | {c['link']} | Covered by {c.get('coverage', 1)} sources | CACHED")
         return
 
     print("[INFO] Starting fetch...", file=sys.stderr)
