@@ -1,0 +1,21 @@
+{
+  "name": "the-morning-prompt",
+  "version": "1.0.0",
+  "description": "Daily AI newsletter agent - fetches, scores, and delivers top 5 AI stories",
+  "type": "module",
+  "scripts": {
+    "dev": "vercel dev",
+    "build": "echo 'Build completed'",
+    "start": "echo 'Deployment ready'",
+    "generate": "python editor.py"
+  },
+  "keywords": ["newsletter", "ai", "rss", "automation"],
+  "author": "dev@ocular.dev",
+  "license": "MIT",
+  "devDependencies": {
+    "vercel": "latest"
+  },
+  "engines": {
+    "node": "18.x"
+  }
+}

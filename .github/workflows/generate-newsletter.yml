@@ -1,0 +1,60 @@
+name: Generate Daily Newsletter
+
+on:
+  schedule:
+    # Daily at 12:00 PM UTC (adjust timezone as needed)
+    - cron: '0 12 * * *'
+  workflow_dispatch:  # Allow manual triggering
+
+jobs:
+  generate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        with:
+          ref: main
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Set environment variables
+        env:
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_ANON_KEY: ${{ secrets.SUPABASE_ANON_KEY }}
+        run: |
+          echo "SUPABASE_URL=$SUPABASE_URL" >> $GITHUB_ENV
+          echo "SUPABASE_ANON_KEY=$SUPABASE_ANON_KEY" >> $GITHUB_ENV
+
+      - name: Generate newsletter
+        run: |
+          python editor.py
+          echo "Newsletter generated at $(date -u +'%Y-%m-%d %H:%M:%S UTC')"
+
+      - name: Commit and push changes
+        run: |
+          git config --local user.email "github-actions[bot]@users.noreply.github.com"
+          git config --local user.name "github-actions[bot]"
+          git add output/newsletter-final.html published.json words_of_day.json .feed_cache.json
+          git commit -m "Daily newsletter generated at $(date -u +'%Y-%m-%d %H:%M:%S UTC')" || echo "No changes to commit"
+          git push origin main
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Notify on success
+        if: success()
+        run: echo "✅ Newsletter generated and deployed successfully"
+
+      - name: Notify on failure
+        if: failure()
+        run: |
+          echo "❌ Newsletter generation failed"
+          exit 1

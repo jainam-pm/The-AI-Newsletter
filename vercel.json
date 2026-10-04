@@ -1,0 +1,36 @@
+{
+  "name": "The Morning Prompt",
+  "version": 2,
+  "builds": [
+    {
+      "src": "api/generate.js",
+      "use": "@vercel/node"
+    }
+  ],
+  "routes": [
+    {
+      "src": "/api/generate",
+      "dest": "api/generate.js"
+    }
+  ],
+  "env": {
+    "SUPABASE_URL": {
+      "description": "Supabase project URL",
+      "required": true
+    },
+    "SUPABASE_ANON_KEY": {
+      "description": "Supabase anonymous public key",
+      "required": true
+    },
+    "PYTHON_EXECUTABLE": {
+      "description": "Path to Python executable",
+      "default": "/usr/bin/python3"
+    }
+  },
+  "crons": [
+    {
+      "path": "/api/generate",
+      "schedule": "0 12 * * *"
+    }
+  ]
+}
